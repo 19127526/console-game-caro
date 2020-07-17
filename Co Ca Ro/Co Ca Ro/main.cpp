@@ -2,8 +2,7 @@
 using namespace std;
 
 int  main() {
-	cout << "Thieu awn loz";
-	cout << "Quan dep trai ";
-	cout << "Quan dep trai123 ";
+	cout << "123456";
+	
 	return 0;
 }
