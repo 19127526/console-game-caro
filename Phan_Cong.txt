@@ -16,7 +16,7 @@ When two players tick the board, we print some statistics of two players, for ex
 counting the number of ticking for each player … You yourself organize the interface
 such that it is clear and pretty.
 
-4.5 Provide the main menu – 1.5m - Quân
+4.5 Provide the main menu – 1.5m 
 When coming to boardgame, we print the menu game, for example, “New Game”, “Load
 Game”, “Settings”, … So, this helps the players to easily choose actions they want.
 
