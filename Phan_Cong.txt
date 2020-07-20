@@ -1,22 +1,22 @@
-4.1 Save/load – 2m
+4.1 Save/load – 2m - Thịnh + Quân
 In this guideline, we cannot save and load the game. We need two features. When the
 players hit ‘L’, we show the line requesting the players provide the filename to save.
 When the players hit ‘T’, we show the line requesting the players provide the file to load.
 
 
-4.2 Recognize win/lose/draw – 2m
+4.2 Recognize win/lose/draw – 2m - // Phát + Thiệu 
 Need to provide the caro rule to know win/lose/draw.
 
-4.3 Provide animation of win/lose/draw – 2m
+4.3 Provide animation of win/lose/draw – 2m // Phát + Thiệu
 In this guideline, we only print the simple line showing win/lose/draw. Provide the vivid
 animation for this event.
 
-4.4 Creating playing interface – 1.5m
+4.4 Creating playing interface – 1.5m 
 When two players tick the board, we print some statistics of two players, for example,
 counting the number of ticking for each player … You yourself organize the interface
 such that it is clear and pretty.
 
-4.5 Provide the main menu – 1.5m
+4.5 Provide the main menu – 1.5m - Quân
 When coming to boardgame, we print the menu game, for example, “New Game”, “Load
 Game”, “Settings”, … So, this helps the players to easily choose actions they want.
 
