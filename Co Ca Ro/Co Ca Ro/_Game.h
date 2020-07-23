@@ -1,25 +1,29 @@
 #pragma once
+#include <stdio.h>
+#include <conio.h>
 #include "_Board.h"
-class _Game{
-	_Board* _b; // mot bang game
-	bool _turn; // tra ve: true : nguoi 1 : false : nguoi 2
-	int _x, _y; // Vi tri hien tai cua con tro
-	int _command; // phim nhap cua nguoi choi
-	bool _loop; // Check xem nguoi dung co thoat khoi tro choi hay khong
+
+class _Game
+{
+private:
+	_Board* _b;// a board game
+	bool _turn;// turn: true for the 1
+	short _x, _y; // current position of cursor
+	int _command; // input-key from the players
+	bool _loop;
+	_Common& console;
 public:
-	_Game(int, int, int);
+	_Game(char, short, short, _Common&);
 	~_Game();
-	int getCommand();
 	bool isContinue();
-	char waitKeyBoard(); // Nhan phim tu nguoi dung
 	char askContinue();
-	void startGame(); // Ham bat dau game
-	void exitGame(); // Ham ket thuc game
+	void startGame(); // Function to start the game
+	void exitGame(); // Function to exit the game
 	int processFinish();
 	bool processCheckBoard();
+	int getCommand();
 	void moveRight();
 	void moveLeft();
 	void moveUp();
 	void moveDown();
 };
-

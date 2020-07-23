@@ -1,14 +1,17 @@
 #pragma once
+#include <stdio.h>
 #include "_Point.h"
-#include <iostream>
 #include "_Common.h"
-class _Board{
+
+class _Board
+{
 private:
 	int _size;
 	int _left, _top;
 	_Point** _pArr;
+	_Common& console;
 public:
-	_Board(int, int, int);
+	_Board(const char&, const short&, const short&, _Common&);
 	~_Board();
 	int getSize();
 	int getLeft();
@@ -17,6 +20,6 @@ public:
 	int getYAt(int, int);
 	void resetData();
 	void drawBoard();
-	int checkboard(int, int, bool);
+	int checkBoard(int, int, bool);
 	int testBoard();
 };

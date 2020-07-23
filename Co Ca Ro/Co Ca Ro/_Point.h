@@ -1,5 +1,7 @@
 #pragma once
-class _Point{
+class _Point
+{
+private:
 	int _x, _y, _check;
 public:
 	_Point();
@@ -11,5 +13,3 @@ public:
 	void setX(int);
 	void setY(int);
 };
-
-
