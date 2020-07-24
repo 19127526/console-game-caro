@@ -2,10 +2,12 @@
 #include <Windows.h>
 
 #define	BLACK 0
-#define	LIGHTGRAY 7
-#define	LIGHTCYAN 11
-#define	LIGHTRED 12
-#define	WHITE 15
+#define	BLUE 1
+#define	RED 4
+#define WHITE 7
+#define LIGHT_BLUE 9
+#define	LIGHT_RED 12
+#define	BRIGHT_WHITE 15
 
 class _Common
 {

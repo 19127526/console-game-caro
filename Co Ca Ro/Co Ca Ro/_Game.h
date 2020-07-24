@@ -10,6 +10,7 @@ private:
 	bool _turn;// turn: true for the 1
 	short _x, _y; // current position of cursor
 	int _command; // input-key from the players
+	bool _turn_change;
 	bool _loop;
 	_Common& console;
 public:
@@ -26,4 +27,5 @@ public:
 	void moveLeft();
 	void moveUp();
 	void moveDown();
+	void printTurnChar();
 };

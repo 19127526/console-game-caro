@@ -62,9 +62,9 @@ void _Board::drawBoard()
 	if (_pArr == NULL)
 		return;
 
-	console.setConsoleColor(LIGHTGRAY, BLACK);
-	console.clearConsole();
 	console.setConsoleColor(WHITE, BLACK);
+	console.clearConsole();
+	console.setConsoleColor(BRIGHT_WHITE, BLACK);
 
 	for (short i = 0; i < _size * 2 + 1; i++)
 	{
@@ -79,7 +79,7 @@ void _Board::drawBoard()
 	putchar(201); //Ve duong tren
 	for (short i = 1; i < _size * 4; i++)
 	{
-		Sleep(10);
+		//Sleep(10);
 		if (i % 4 == 0)
 			putchar(209);
 		else
@@ -89,7 +89,7 @@ void _Board::drawBoard()
 
 	for (short i = 1; i < _size * 2; i++)
 	{
-		Sleep(20);
+		//Sleep(20);
 		console.gotoXY(_size * 4 + _left + 1, i + _top);
 		if (i % 2 != 0)
 			putchar(186);
@@ -103,7 +103,7 @@ void _Board::drawBoard()
 	for (short i = 1; i < _size * 4; i++)
 	{
 		console.gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
-		Sleep(10);
+		//Sleep(10);
 		if (i % 4 == 0)
 			putchar(207);
 		else
@@ -114,7 +114,7 @@ void _Board::drawBoard()
 
 	for (short i = 1; i < _size * 2; i++)
 	{
-		Sleep(20);
+		//Sleep(20);
 		console.gotoXY(_left + 1, _size * 2 + _top - i);
 		if (i % 2 != 0)
 			putchar(186);
@@ -132,7 +132,7 @@ void _Board::drawBoard()
 				putchar(179);
 			}
 		}
-		Sleep(20);
+		//Sleep(20);
 	}
 
 	for (short i = 1; i < _size * 4; i++)
@@ -145,7 +145,7 @@ void _Board::drawBoard()
 			else
 				putchar(196);
 		}
-		Sleep(10);
+		//Sleep(10);
 	}
 }
 

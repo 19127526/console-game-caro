@@ -5,6 +5,7 @@ _Game::_Game(char pSize, short pLeft, short pTop, _Common& console) : _x(pLeft),
 	_b = new _Board(pSize, pLeft, pTop, console);
 	_loop = _turn = true;
 	_command = -1;
+	_turn_change = 1;
 }
 
 _Game::~_Game()
@@ -66,9 +67,10 @@ void _Game::startGame()
 	console.clearConsole();
 	_b->resetData(); // Setting the original data
 	_b->drawBoard(); // Draw boad
-	_x = _b->getXAt(6, 6);
-	_y = _b->getYAt(6, 6);
+	_x = _b->getXAt(5, 6);
+	_y = _b->getYAt(5, 6);
 	console.gotoXY(_x, _y);
+	moveDown();
 	while (isContinue())
 	{
 		switch (getCommand())
@@ -102,18 +104,26 @@ void _Game::exitGame()
 
 bool _Game::processCheckBoard()
 {
-	switch (_b->checkBoard(_x, _y, _turn))
+	int c = _b->checkBoard(_x, _y, _turn);
+	if (c == -1 || c == 1)
 	{
-	case -1:
-		putchar('X');
-		break;
-	case 1:
-		putchar('O');
-		break;
-	case 0:
-		return false; // Tick the cell marked
+		console.gotoXY(_x, _y);
+		if (c == -1)
+		{
+			console.setConsoleColor(BRIGHT_WHITE, RED);
+			putchar(88);
+		}
+		else
+		{
+			console.setConsoleColor(BRIGHT_WHITE, BLUE);
+			putchar(79);
+		}
+		_turn_change = 1;
+		_turn = !_turn;
+		return true;
 	}
-	return true;
+	else
+		return false; // Tick the cell marked
 }
 
 int _Game::processFinish()
@@ -142,8 +152,14 @@ void _Game::moveRight()
 {
 	if (_x < _b->getXAt(_b->getSize() - 1, _b->getSize() - 1))
 	{
+		if (_turn_change == 0)
+		{
+			console.gotoXY(_x, _y);
+			putchar(32);
+		}
 		_x += 4;
 		console.gotoXY(_x, _y);
+		printTurnChar();
 	}
 }
 
@@ -151,8 +167,14 @@ void _Game::moveLeft()
 {
 	if (_x > _b->getXAt(0, 0))
 	{
+		if (_turn_change == 0)
+		{
+			console.gotoXY(_x, _y);
+			putchar(32);
+		}
 		_x -= 4;
 		console.gotoXY(_x, _y);
+		printTurnChar();
 	}
 }
 
@@ -160,8 +182,14 @@ void _Game::moveDown()
 {
 	if (_y < _b->getYAt(_b->getSize() - 1, _b->getSize() - 1))
 	{
+		if (_turn_change == 0)
+		{
+			console.gotoXY(_x, _y);
+			putchar(32);
+		}
 		_y += 2;
 		console.gotoXY(_x, _y);
+		printTurnChar();
 	}
 }
 
@@ -169,8 +197,29 @@ void _Game::moveUp()
 {
 	if (_y > _b->getYAt(0, 0))
 	{
+		if (_turn_change == 0)
+		{
+			console.gotoXY(_x, _y);
+			putchar(32);
+		}
 		_y -= 2;
 		console.gotoXY(_x, _y);
+		printTurnChar();
 	}
 }
 
+void _Game::printTurnChar()
+{
+	if (_turn_change == 1)
+	{
+		if (_turn == 1)
+			console.setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
+		else
+			console.setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
+		_turn_change = 0;
+	}
+	if (_turn == 1)
+		putchar(120);
+	else
+		putchar(111);
+}
