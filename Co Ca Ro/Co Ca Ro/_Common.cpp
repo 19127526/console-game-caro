@@ -21,7 +21,7 @@ void _Common::setConsoleWindow()
 	disableMaximize();
 	setConsoleTitle();
 	hideScrollBar();
-	hideCursor();
+	showCursor(false);
 }
 
 void _Common::gotoXY(short pX, short pY)
@@ -61,9 +61,9 @@ void _Common::disableMaximize()
 		GetWindowLong(hWnd, GWL_STYLE) & ~(WS_MAXIMIZEBOX));
 }
 
-void _Common::hideCursor()
+void _Common::showCursor(bool show)
 {
-	CONSOLE_CURSOR_INFO info = { 100, FALSE };
+	CONSOLE_CURSOR_INFO info = { 1, show };
 	SetConsoleCursorInfo(hConsoleOutput, &info);
 }
 

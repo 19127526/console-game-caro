@@ -6,6 +6,7 @@ _Board::_Board(const char& p_size, const short& pX, const short& pY, _Common& _c
 	_pArr = new _Point * [p_size];
 	for (int i = 0; i < p_size; i++)
 		_pArr[i] = new _Point[p_size];
+	_countX = _countO = 0;
 }
 
 _Board::~_Board()
@@ -150,18 +151,22 @@ void _Board::drawBoard()
 }
 
 
-int _Board::checkBoard(int pX, int pY, bool pTurn)
+int _Board::checkBoard(int pX, int pY, bool setPos, bool pTurn)
 {
 	for (int i = 0; i < _size; i++)
 	{
 		for (int j = 0; j < _size; j++)
 		{
-			if (_pArr[i][j].getX() == pX && _pArr[i][j].getY() == pY && _pArr[i][j].getCheck() == 0)
+			if (_pArr[i][j].getX() == pX && _pArr[i][j].getY() == pY)
 			{
-				if (pTurn)
-					_pArr[i][j].setCheck(-1);// If current turn is true: c = -1
-				else
-					_pArr[i][j].setCheck(1);// If current turn is false: c = 1
+				if (setPos == 1 && _pArr[i][j].getCheck() == 0)
+				{
+					if (pTurn)
+						_pArr[i][j].setCheck(-1);// If current turn is true: c = -1
+					else
+						_pArr[i][j].setCheck(1);// If current turn is false: c = 1
+				}
+				(pTurn == 1) ? _countX++ : _countO++;
 				return _pArr[i][j].getCheck();
 			}
 		}
@@ -171,5 +176,5 @@ int _Board::checkBoard(int pX, int pY, bool pTurn)
 
 int _Board::testBoard()
 {
-	return 0;
+	return 2;
 }

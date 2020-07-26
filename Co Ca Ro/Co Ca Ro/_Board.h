@@ -8,6 +8,7 @@ class _Board
 private:
 	int _size;
 	int _left, _top;
+	int _countX, _countO;
 	_Point** _pArr;
 	_Common& console;
 public:
@@ -20,6 +21,6 @@ public:
 	int getYAt(int, int);
 	void resetData();
 	void drawBoard();
-	int checkBoard(int, int, bool);
+	int checkBoard(int, int, bool, bool = 0);
 	int testBoard();
 };

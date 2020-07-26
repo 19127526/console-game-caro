@@ -24,7 +24,7 @@ public:
 	void hideScrollBar();
 	void setConsoleTitle();
 	void disableMaximize();
-	void hideCursor();
+	void showCursor(bool);
 	void setFontInfo();
 	void clearConsole();
 };

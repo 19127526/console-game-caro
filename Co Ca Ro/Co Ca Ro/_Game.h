@@ -10,9 +10,10 @@ private:
 	bool _turn;// turn: true for the 1
 	short _x, _y; // current position of cursor
 	int _command; // input-key from the players
-	bool _turn_change;
+	bool _changeTurn;
 	bool _loop;
-	_Common& console;
+	_Common& _console;
+	bool _showCursor;
 public:
 	_Game(char, short, short, _Common&);
 	~_Game();
