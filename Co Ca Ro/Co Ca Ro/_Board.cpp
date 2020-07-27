@@ -67,6 +67,7 @@ void _Board::drawBoard()
 	console.clearConsole();
 	console.setConsoleColor(BRIGHT_WHITE, BLACK);
 
+	//ve khung trang
 	for (short i = 0; i < _size * 2 + 1; i++)
 	{
 		console.gotoXY(_left, _top + i);
@@ -76,8 +77,9 @@ void _Board::drawBoard()
 		}
 	}
 
-	console.gotoXY(_left + 1, _top);
-	putchar(201); //Ve duong tren
+	//Ve duong tren
+	console.gotoXY(_left + 1, _top); 
+	putchar(201);
 	for (short i = 1; i < _size * 4; i++)
 	{
 		//Sleep(10);
@@ -88,6 +90,8 @@ void _Board::drawBoard()
 	}
 	putchar(187);
 
+
+	//Ve duong ben phai
 	for (short i = 1; i < _size * 2; i++)
 	{
 		//Sleep(20);
@@ -101,6 +105,7 @@ void _Board::drawBoard()
 	putchar(188);
 
 
+	//Ve duong duoi
 	for (short i = 1; i < _size * 4; i++)
 	{
 		console.gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
@@ -113,6 +118,7 @@ void _Board::drawBoard()
 	console.gotoXY(_left + 1, _size * 2 + _top);
 	putchar(200);
 
+	//Ve duong ben trai
 	for (short i = 1; i < _size * 2; i++)
 	{
 		//Sleep(20);
@@ -123,6 +129,7 @@ void _Board::drawBoard()
 			putchar(199);
 	}
 
+	//Ve cac duong doc
 	for (short i = 1; i < _size * 2; i++)
 	{
 		for (short j = 4; j < _size * 4; j += 4)
@@ -136,6 +143,7 @@ void _Board::drawBoard()
 		//Sleep(20);
 	}
 
+	//Ve cac duong ngang
 	for (short i = 1; i < _size * 4; i++)
 	{
 		for (short j = 2; j < _size * 2; j += 2)
