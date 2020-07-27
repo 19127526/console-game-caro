@@ -32,7 +32,7 @@ void _Common::movCenterAndRes()
 {
 	RECT rectClient, rectWindow;
 	GetClientRect(consoleWindow, &rectClient), GetWindowRect(consoleWindow, &rectWindow);
-	int width = 1200;
+	int width = 1216;
 	int height = 784;
 	int posx = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
 		posy = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;

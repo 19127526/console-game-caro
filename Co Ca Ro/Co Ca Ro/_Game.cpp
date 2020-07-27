@@ -114,12 +114,12 @@ bool _Game::processCheckBoard()
 		_Common::gotoXY(_x, _y);
 		if (c == -1)
 		{
-			_Common::setConsoleColor(BRIGHT_WHITE, RED);
+			_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
 			putchar(88);
 		}
 		else
 		{
-			_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+			_Common::setConsoleColor(BRIGHT_WHITE, RED);
 			putchar(79);
 		}
 		int result = processFinish(i, j);
@@ -240,9 +240,9 @@ void _Game::printTurnChar()
 		if (_changeTurn == 1)
 		{
 			if (_turn == 1)
-				_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
-			else
 				_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
+			else
+				_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
 			_changeTurn = 0;
 		}
 		if (_turn == 1)
