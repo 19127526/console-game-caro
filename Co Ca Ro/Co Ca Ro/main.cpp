@@ -8,9 +8,8 @@
 
 int main()
 {
-	_Common console;
-	console.setConsoleWindow();
-	_Game g(SIZE, LEFT, TOP, console);
+	_Common::setConsoleWindow();
+	_Game g(SIZE, LEFT, TOP);
 	g.startGame();
 
 	Sleep(100000);

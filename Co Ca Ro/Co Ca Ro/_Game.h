@@ -12,10 +12,9 @@ private:
 	int _command; // input-key from the players
 	bool _changeTurn;
 	bool _loop;
-	_Common& _console;
 	bool _showCursor;
 public:
-	_Game(char, short, short, _Common&);
+	_Game(char, short, short);
 	~_Game();
 	bool isContinue();
 	char askContinue();
