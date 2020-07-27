@@ -21,6 +21,6 @@ public:
 	int getYAt(int, int);
 	void resetData();
 	void drawBoard();
-	int checkBoard(int, int, bool, bool = 0);
-	int testBoard();
+	int checkBoard(int, int, bool, bool = 0, int* = nullptr, int * = nullptr);
+	int testBoard(int, int);
 };

@@ -151,7 +151,7 @@ void _Board::drawBoard()
 }
 
 
-int _Board::checkBoard(int pX, int pY, bool setPos, bool pTurn)
+int _Board::checkBoard(int pX, int pY, bool setPos, bool pTurn, int *getI, int *getJ)
 {
 	for (int i = 0; i < _size; i++)
 	{
@@ -161,8 +161,10 @@ int _Board::checkBoard(int pX, int pY, bool setPos, bool pTurn)
 			{
 				if (setPos == 1 && _pArr[i][j].getCheck() == 0)
 				{
+					*getI = i;
+					*getJ = j;
 					if (pTurn)
-						_pArr[i][j].setCheck(-1);// If current turn is true: c = -1
+						_pArr[i][j].setCheck(-1); // If current turn is true: c = -1
 					else
 						_pArr[i][j].setCheck(1);// If current turn is false: c = 1
 				}
@@ -174,7 +176,13 @@ int _Board::checkBoard(int pX, int pY, bool setPos, bool pTurn)
 	return 0;
 }
 
-int _Board::testBoard()
+int _Board::testBoard(int i, int j)
 {
-	return 2;
+	if (_countX + _countO == _size * _size)
+		return 0; // draw
+	else if (i == 0 && j == 0)
+		return -1; // win 0
+	else if (i == _size - 1 && j == _size - 1)
+		return 1; // win  1
+	return 2; // continue
 }

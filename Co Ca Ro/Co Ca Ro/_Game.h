@@ -21,7 +21,7 @@ public:
 	char askContinue();
 	void startGame(); // Function to start the game
 	void exitGame(); // Function to exit the game
-	int processFinish();
+	int processFinish(int, int);
 	bool processCheckBoard();
 	int getCommand();
 	void moveRight();

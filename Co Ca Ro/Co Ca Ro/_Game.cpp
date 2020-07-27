@@ -107,7 +107,8 @@ void _Game::exitGame()
 
 bool _Game::processCheckBoard()
 {
-	int c = _b->checkBoard(_x, _y, true, _turn);
+	int i, j;
+	int c = _b->checkBoard(_x, _y, true, _turn, &i, &j);
 	if (c == -1 || c == 1)
 	{
 		_console.gotoXY(_x, _y);
@@ -121,11 +122,14 @@ bool _Game::processCheckBoard()
 			_console.setConsoleColor(BRIGHT_WHITE, BLUE);
 			putchar(79);
 		}
-		if (processFinish() == 2)
+		int result = processFinish(i, j);
+		if (result == 2)
 		{
 			_showCursor = true;
 			_console.showCursor(_showCursor);
 		}
+		else if (result == -1)
+			return 9999999;
 			
 		return true;
 	}
@@ -133,10 +137,10 @@ bool _Game::processCheckBoard()
 		return false; // Tick the cell marked
 }
 
-int _Game::processFinish()
+int _Game::processFinish(int i, int j)
 {
 	_console.gotoXY(0, _b->getYAt(_b->getSize() - 1, _b->getSize() - 1) + 2);
-	int pWhoWin = _b->testBoard();
+	int pWhoWin = _b->testBoard(i, j);
 	switch (pWhoWin)
 	{
 	case -1:

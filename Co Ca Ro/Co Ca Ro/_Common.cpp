@@ -72,7 +72,7 @@ void _Common::setFontInfo()
 	CONSOLE_FONT_INFOEX info;
 	info.cbSize = sizeof(info);
 	GetCurrentConsoleFontEx(hConsoleOutput, FALSE, &info);
-	//info.dwFontSize.X = 12;
+	info.dwFontSize.X = 12;
 	info.dwFontSize.Y = 24;
 	wcscpy_s(info.FaceName, L"Consolas");
 	SetCurrentConsoleFontEx(hConsoleOutput, FALSE, &info);
