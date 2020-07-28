@@ -10,9 +10,8 @@ private:
 	int _left, _top;
 	int _countX, _countO;
 	_Point** _pArr;
-	_Common& console;
 public:
-	_Board(const char&, const short&, const short&, _Common&);
+	_Board(const char&, const short&, const short&);
 	~_Board();
 	int getSize();
 	int getLeft();
@@ -21,6 +20,7 @@ public:
 	int getYAt(int, int);
 	void resetData();
 	void drawBoard();
-	int checkBoard(int, int, bool, bool = 0, int* = nullptr, int * = nullptr);
+	int checkBoard(int, int, bool);
 	int testBoard(int, int);
+	bool isPlacedAtXY(int, int);
 };

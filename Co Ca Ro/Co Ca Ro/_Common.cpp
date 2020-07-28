@@ -1,21 +1,20 @@
 #include "_Common.h"
 
-_Common::_Common()
-{
-	hWnd = GetConsoleWindow();
-	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	//default_hWnd = hWnd, default_hConsoleOutput = hConsoleOutput;
-}
+HWND _Common::consoleWindow;
+HANDLE _Common::consoleOutput;
+
+//_Common::_Common()
+//{
+//}
 
 //_Common::~_Common()
 //{
-//	hWnd = default_hWnd;
-//	hConsoleOutput = default_hConsoleOutput;
-//	setConsoleWindow();
 //}
 
 void _Common::setConsoleWindow()
 {
+	consoleWindow = GetConsoleWindow();
+	consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	setFontInfo();
 	movCenterAndRes();
 	disableMaximize();
@@ -26,28 +25,28 @@ void _Common::setConsoleWindow()
 
 void _Common::gotoXY(short pX, short pY)
 {
-	SetConsoleCursorPosition(hConsoleOutput, COORD{ pX, pY });
+	SetConsoleCursorPosition(consoleOutput, COORD{ pX, pY });
 }
 
 void _Common::movCenterAndRes()
 {
 	RECT rectClient, rectWindow;
-	GetClientRect(hWnd, &rectClient), GetWindowRect(hWnd, &rectWindow);
-	int width = 1200;
+	GetClientRect(consoleWindow, &rectClient), GetWindowRect(consoleWindow, &rectWindow);
+	int width = 1216;
 	int height = 784;
 	int posx = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
 		posy = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
-	MoveWindow(hWnd, posx, posy, width, height, TRUE);
+	MoveWindow(consoleWindow, posx, posy, width, height, TRUE);
 }
 
 void _Common::setConsoleColor(int background, int foreground)
 {
-	SetConsoleTextAttribute(hConsoleOutput, background * 16 + foreground);
+	SetConsoleTextAttribute(consoleOutput, background * 16 + foreground);
 }
 
 void _Common::hideScrollBar()
 {
-	ShowScrollBar(hWnd, SB_BOTH, 0);
+	ShowScrollBar(consoleWindow, SB_BOTH, 0);
 }
 
 void _Common::setConsoleTitle()
@@ -57,25 +56,25 @@ void _Common::setConsoleTitle()
 
 void _Common::disableMaximize()
 {
-	SetWindowLong(hWnd, GWL_STYLE,
-		GetWindowLong(hWnd, GWL_STYLE) & ~(WS_MAXIMIZEBOX));
+	SetWindowLong(consoleWindow, GWL_STYLE,
+		GetWindowLong(consoleWindow, GWL_STYLE) & ~(WS_MAXIMIZEBOX));
 }
 
 void _Common::showCursor(bool show)
 {
 	CONSOLE_CURSOR_INFO info = { 1, show };
-	SetConsoleCursorInfo(hConsoleOutput, &info);
+	SetConsoleCursorInfo(consoleOutput, &info);
 }
 
 void _Common::setFontInfo()
 {
 	CONSOLE_FONT_INFOEX info;
 	info.cbSize = sizeof(info);
-	GetCurrentConsoleFontEx(hConsoleOutput, FALSE, &info);
+	GetCurrentConsoleFontEx(consoleOutput, FALSE, &info);
 	info.dwFontSize.X = 12;
 	info.dwFontSize.Y = 24;
 	wcscpy_s(info.FaceName, L"Consolas");
-	SetCurrentConsoleFontEx(hConsoleOutput, FALSE, &info);
+	SetCurrentConsoleFontEx(consoleOutput, FALSE, &info);
 }
 
 void _Common::clearConsole()

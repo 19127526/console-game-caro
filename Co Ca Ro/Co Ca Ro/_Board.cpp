@@ -1,7 +1,7 @@
 #include "_Board.h"
 
-_Board::_Board(const char& p_size, const short& pX, const short& pY, _Common& _console) :
-	_size(p_size), _left(pX), _top(pY), console(_console)
+_Board::_Board(const char& p_size, const short& pX, const short& pY) :
+	_size(p_size), _left(pX), _top(pY)
 {
 	_pArr = new _Point * [p_size];
 	for (int i = 0; i < p_size; i++)
@@ -63,14 +63,14 @@ void _Board::drawBoard()
 	if (_pArr == NULL)
 		return;
 
-	console.setConsoleColor(WHITE, BLACK);
-	console.clearConsole();
-	console.setConsoleColor(BRIGHT_WHITE, BLACK);
+	_Common::setConsoleColor(WHITE, BLACK);
+	_Common::clearConsole();
+	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 
 	//ve khung trang
 	for (short i = 0; i < _size * 2 + 1; i++)
 	{
-		console.gotoXY(_left, _top + i);
+		_Common::gotoXY(_left, _top + i);
 		for (short k = 0; k < _size * 4 + 3; k++)
 		{
 			putchar(32);
@@ -78,11 +78,11 @@ void _Board::drawBoard()
 	}
 
 	//Ve duong tren
-	console.gotoXY(_left + 1, _top); 
+	_Common::gotoXY(_left + 1, _top); 
 	putchar(201);
 	for (short i = 1; i < _size * 4; i++)
 	{
-		//Sleep(10);
+		Sleep(10);
 		if (i % 4 == 0)
 			putchar(209);
 		else
@@ -94,35 +94,35 @@ void _Board::drawBoard()
 	//Ve duong ben phai
 	for (short i = 1; i < _size * 2; i++)
 	{
-		//Sleep(20);
-		console.gotoXY(_size * 4 + _left + 1, i + _top);
+		Sleep(20);
+		_Common::gotoXY(_size * 4 + _left + 1, i + _top);
 		if (i % 2 != 0)
 			putchar(186);
 		else
 			putchar(182);
 	}
-	console.gotoXY(_size * 4 + _left + 1, _size * 2 + _top);
+	_Common::gotoXY(_size * 4 + _left + 1, _size * 2 + _top);
 	putchar(188);
 
 
 	//Ve duong duoi
 	for (short i = 1; i < _size * 4; i++)
 	{
-		console.gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
-		//Sleep(10);
+		_Common::gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
+		Sleep(10);
 		if (i % 4 == 0)
 			putchar(207);
 		else
 			putchar(205);
 	}
-	console.gotoXY(_left + 1, _size * 2 + _top);
+	_Common::gotoXY(_left + 1, _size * 2 + _top);
 	putchar(200);
 
 	//Ve duong ben trai
 	for (short i = 1; i < _size * 2; i++)
 	{
-		//Sleep(20);
-		console.gotoXY(_left + 1, _size * 2 + _top - i);
+		Sleep(20);
+		_Common::gotoXY(_left + 1, _size * 2 + _top - i);
 		if (i % 2 != 0)
 			putchar(186);
 		else
@@ -136,11 +136,11 @@ void _Board::drawBoard()
 		{
 			if (i % 2 != 0)
 			{
-				console.gotoXY(j + _left + 1, i + _top);
+				_Common::gotoXY(j + _left + 1, i + _top);
 				putchar(179);
 			}
 		}
-		//Sleep(20);
+		Sleep(20);
 	}
 
 	//Ve cac duong ngang
@@ -148,18 +148,18 @@ void _Board::drawBoard()
 	{
 		for (short j = 2; j < _size * 2; j += 2)
 		{
-			console.gotoXY(i + _left + 1, j + _top);
+			_Common::gotoXY(i + _left + 1, j + _top);
 			if (i % 4 == 0)
 				putchar(197);
 			else
 				putchar(196);
 		}
-		//Sleep(10);
+		Sleep(10);
 	}
 }
 
 
-int _Board::checkBoard(int pX, int pY, bool setPos, bool pTurn, int *getI, int *getJ)
+int _Board::checkBoard(int pX, int pY, bool pTurn)
 {
 	for (int i = 0; i < _size; i++)
 	{
@@ -167,30 +167,56 @@ int _Board::checkBoard(int pX, int pY, bool setPos, bool pTurn, int *getI, int *
 		{
 			if (_pArr[i][j].getX() == pX && _pArr[i][j].getY() == pY)
 			{
-				if (setPos == 1 && _pArr[i][j].getCheck() == 0)
+				if (_pArr[i][j].getCheck() == 0)
 				{
-					*getI = i;
-					*getJ = j;
 					if (pTurn)
-						_pArr[i][j].setCheck(-1); // If current turn is true: c = -1
+					{
+						_countX++;
+						_pArr[i][j].setCheck(-1);
+					}
 					else
-						_pArr[i][j].setCheck(1);// If current turn is false: c = 1
+					{
+						_countO++;
+						_pArr[i][j].setCheck(1);
+					}
+					return _pArr[i][j].getCheck();
 				}
-				(pTurn == 1) ? _countX++ : _countO++;
-				return _pArr[i][j].getCheck();
+				else
+					return 0;
 			}
 		}
 	}
-	return 0;
 }
 
-int _Board::testBoard(int i, int j)
+int _Board::testBoard(int pX, int pY) //i,j la dong,cot cua bang
 {
 	if (_countX + _countO == _size * _size)
 		return 0; // draw
-	else if (i == 0 && j == 0)
-		return -1; // win 0
-	else if (i == _size - 1 && j == _size - 1)
-		return 1; // win  1
+
+	int i, j;
+	for (i = 0; i < _size; i++)
+	{
+		for (j = 0; j < _size; j++)
+		{
+			if (_pArr[i][j].getX() == pX && _pArr[i][j].getY() == pY)
+			{
+				break;
+			}
+		}
+	}
 	return 2; // continue
+}
+
+bool _Board::isPlacedAtXY(int pX, int pY)
+{
+	for (int i = 0; i < _size; i++)
+	{
+		for (int j = 0; j < _size; j++)
+		{
+			if (_pArr[i][j].getX() == pX && _pArr[i][j].getY() == pY)
+			{
+				return _pArr[i][j].getCheck() != 0;
+			}
+		}
+	}
 }

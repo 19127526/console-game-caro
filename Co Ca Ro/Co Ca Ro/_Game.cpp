@@ -1,8 +1,8 @@
 #include "_Game.h"
 
-_Game::_Game(char pSize, short pLeft, short pTop, _Common& console) : _x(pLeft), _y(pTop), _console(console)
+_Game::_Game(char pSize, short pLeft, short pTop) : _x(pLeft), _y(pTop)
 {
-	_b = new _Board(pSize, pLeft, pTop, _console);
+	_b = new _Board(pSize, pLeft, pTop);
 	_loop = _turn = _changeTurn = true;
 	_showCursor = false;
 	_command = -1;
@@ -58,18 +58,18 @@ int _Game::getCommand()
 
 char _Game::askContinue()
 {
-	_console.gotoXY(0, _b->getYAt(_b->getSize() - 1, _b->getSize() - 1) + 4);
+	_Common::gotoXY(0, _b->getYAt(_b->getSize() - 1, _b->getSize() - 1) + 4);
 	return getCommand();
 }
 
 void _Game::startGame()
 {
-	_console.clearConsole();
+	_Common::clearConsole();
 	_b->resetData(); // Setting the original data
 	_b->drawBoard(); // Draw boad
 	_x = _b->getXAt(5, 6);
 	_y = _b->getYAt(5, 6);
-	_console.gotoXY(_x, _y);
+	_Common::gotoXY(_x, _y);
 	moveDown();
 	while (isContinue())
 	{
@@ -107,40 +107,36 @@ void _Game::exitGame()
 
 bool _Game::processCheckBoard()
 {
-	int i, j;
-	int c = _b->checkBoard(_x, _y, true, _turn, &i, &j);
+	int c = _b->checkBoard(_x, _y, _turn);
 	if (c == -1 || c == 1)
 	{
-		_console.gotoXY(_x, _y);
+		_Common::gotoXY(_x, _y);
 		if (c == -1)
 		{
-			_console.setConsoleColor(BRIGHT_WHITE, RED);
+			_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
 			putchar(88);
 		}
 		else
 		{
-			_console.setConsoleColor(BRIGHT_WHITE, BLUE);
+			_Common::setConsoleColor(BRIGHT_WHITE, RED);
 			putchar(79);
 		}
-		int result = processFinish(i, j);
+		int result = processFinish();
 		if (result == 2)
 		{
 			_showCursor = true;
-			_console.showCursor(_showCursor);
+			_Common::showCursor(_showCursor);
 		}
-		else if (result == -1)
-			return 9999999;
-			
 		return true;
 	}
 	else
 		return false; // Tick the cell marked
 }
 
-int _Game::processFinish(int i, int j)
+int _Game::processFinish()
 {
-	_console.gotoXY(0, _b->getYAt(_b->getSize() - 1, _b->getSize() - 1) + 2);
-	int pWhoWin = _b->testBoard(i, j);
+	_Common::gotoXY(0, _b->getYAt(_b->getSize() - 1, _b->getSize() - 1) + 2);
+	int pWhoWin = _b->testBoard(_x, _y);
 	switch (pWhoWin)
 	{
 	case -1:
@@ -156,7 +152,7 @@ int _Game::processFinish(int i, int j)
 		_turn = !_turn; // change turn if nothing happen
 		_changeTurn = 1;
 	}
-	_console.gotoXY(_x, _y);// Return the current position of cursor
+	_Common::gotoXY(_x, _y);// Return the current position of cursor
 	return pWhoWin;
 }
 
@@ -164,13 +160,13 @@ void _Game::moveRight()
 {
 	if (_x < _b->getXAt(_b->getSize() - 1, _b->getSize() - 1))
 	{
-		if (!_b->checkBoard(_x, _y, false))
+		if (_b->isPlacedAtXY(_x, _y) == 0)
 		{
-			_console.gotoXY(_x, _y);
+			_Common::gotoXY(_x, _y);
 			putchar(32);
 		}
 		_x += 4;
-		_console.gotoXY(_x, _y);
+		_Common::gotoXY(_x, _y);
 		printTurnChar();
 	}
 }
@@ -179,13 +175,13 @@ void _Game::moveLeft()
 {
 	if (_x > _b->getXAt(0, 0))
 	{
-		if (!_b->checkBoard(_x, _y, false))
+		if (_b->isPlacedAtXY(_x, _y) == 0)
 		{
-			_console.gotoXY(_x, _y);
+			_Common::gotoXY(_x, _y);
 			putchar(32);
 		}
 		_x -= 4;
-		_console.gotoXY(_x, _y);
+		_Common::gotoXY(_x, _y);
 		printTurnChar();
 	}
 }
@@ -194,13 +190,13 @@ void _Game::moveDown()
 {
 	if (_y < _b->getYAt(_b->getSize() - 1, _b->getSize() - 1))
 	{
-		if (!_b->checkBoard(_x, _y, false))
+		if (_b->isPlacedAtXY(_x, _y) == 0)
 		{
-			_console.gotoXY(_x, _y);
+			_Common::gotoXY(_x, _y);
 			putchar(32);
 		}
 		_y += 2;
-		_console.gotoXY(_x, _y);
+		_Common::gotoXY(_x, _y);
 		printTurnChar();
 	}
 }
@@ -209,25 +205,25 @@ void _Game::moveUp()
 {
 	if (_y > _b->getYAt(0, 0))
 	{
-		if (!_b->checkBoard(_x, _y, false))
+		if (_b->isPlacedAtXY(_x, _y) == 0)
 		{
-			_console.gotoXY(_x, _y);
+			_Common::gotoXY(_x, _y);
 			putchar(32);
 		}
 		_y -= 2;
-		_console.gotoXY(_x, _y);
+		_Common::gotoXY(_x, _y);
 		printTurnChar();
 	}
 }
 
 void _Game::printTurnChar()
 {
-	if (_b->checkBoard(_x, _y, false))
+	if (_b->isPlacedAtXY(_x,_y))
 	{
 		if (_showCursor == false)
 		{
 			_showCursor = true;
-			_console.showCursor(_showCursor);
+			_Common::showCursor(_showCursor);
 		}
 	}
 	else
@@ -235,21 +231,21 @@ void _Game::printTurnChar()
 		if (_showCursor == true)
 		{
 			_showCursor = false;
-			_console.showCursor(_showCursor);
+			_Common::showCursor(_showCursor);
 		}
 		if (_changeTurn == 1)
 		{
 			if (_turn == 1)
-				_console.setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
+				_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
 			else
-				_console.setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
+				_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
 			_changeTurn = 0;
 		}
 		if (_turn == 1)
 			putchar(120);
 		else
 			putchar(111);
-		_console.gotoXY(_x, _y);
+		_Common::gotoXY(_x, _y);
 	}
 }
 	
