@@ -1,19 +1,19 @@
 #include <stdio.h>
 #include "_Common.h"
 
-void callX()
+inline void callX()
 {
 	_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
 	putchar(88);
 }
 
-void callO()
+inline void callO()
 {
 	_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
 	putchar(79);
 }
 
-void firstLine(bool swap, int i)
+inline void firstLine(bool swap, int i)
 {
 	for (int j = 0; j < 8; j++)
 	{
@@ -22,7 +22,7 @@ void firstLine(bool swap, int i)
 	}
 }
 
-void secondLine(bool swap, int i)
+inline void secondLine(bool swap, int i)
 {
 	for (int j = 0; j < 7; j++)
 	{
@@ -31,7 +31,7 @@ void secondLine(bool swap, int i)
 	}
 }
 
-void NhapNhay()
+inline void NhapNhay()
 {
 	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	_Common::clearConsole();

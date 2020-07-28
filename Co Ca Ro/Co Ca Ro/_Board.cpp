@@ -194,16 +194,23 @@ int _Board::testBoard(int pX, int pY) //i,j la dong,cot cua bang
 		return 0; // draw
 
 	int i, j;
-	for (i = 0; i < _size; i++)
-	{
-		for (j = 0; j < _size; j++)
+	[&] {
+		for (i = 0; i < _size; i++)
 		{
-			if (_pArr[i][j].getX() == pX && _pArr[i][j].getY() == pY)
+			for (j = 0; j < _size; j++)
 			{
-				break;
+				if (_pArr[i][j].getX() == pX && _pArr[i][j].getY() == pY)
+					return;
 			}
 		}
-	}
+	}();
+
+	if (i == 0 && j == 0)
+		return 1;
+
+	if (i == _size - 1 && j == _size - 1)
+		return -1;
+
 	return 2; // continue
 }
 

@@ -140,6 +140,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NhapNhay.cpp" />
+    <ClCompile Include="VeMenu.cpp" />
     <ClCompile Include="_Board.cpp" />
     <ClCompile Include="_Common.cpp" />
     <ClCompile Include="_Game.cpp" />
