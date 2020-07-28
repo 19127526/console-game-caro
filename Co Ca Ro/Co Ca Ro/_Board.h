@@ -10,8 +10,9 @@ private:
 	int _left, _top;
 	int _countX, _countO;
 	_Point** _pArr;
+	_Common& console;
 public:
-	_Board(const char&, const short&, const short&);
+	_Board(const char&, const short&, const short&, _Common&);
 	~_Board();
 	int getSize();
 	int getLeft();

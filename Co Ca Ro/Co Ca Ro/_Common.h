@@ -21,19 +21,19 @@
 class _Common
 {
 private:
-	static HWND consoleWindow;
-	static HANDLE consoleOutput;
+	HWND hWnd; //,default_hWnd;
+	HANDLE hConsoleOutput; //,default_hConsoleOutput;
 public:
-	//_Common();
+	_Common();
 	//~_Common();
-	static void setConsoleWindow();
-	static void gotoXY(short, short);
-	static void movCenterAndRes();
-	static void setConsoleColor(int, int);
-	static void hideScrollBar();
-	static void setConsoleTitle();
-	static void disableMaximize();
-	static void showCursor(bool);
-	static void setFontInfo();
-	static void clearConsole();
+	void setConsoleWindow();
+	void gotoXY(short, short);
+	void movCenterAndRes();
+	void setConsoleColor(int, int);
+	void hideScrollBar();
+	void setConsoleTitle();
+	void disableMaximize();
+	void showCursor(bool);
+	void setFontInfo();
+	void clearConsole();
 };
