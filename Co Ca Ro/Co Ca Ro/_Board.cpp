@@ -82,7 +82,7 @@ void _Board::drawBoard()
 	putchar(201);
 	for (short i = 1; i < _size * 4; i++)
 	{
-		Sleep(10);
+		//Sleep(10);
 		if (i % 4 == 0)
 			putchar(209);
 		else
@@ -94,7 +94,7 @@ void _Board::drawBoard()
 	//Ve duong ben phai
 	for (short i = 1; i < _size * 2; i++)
 	{
-		Sleep(20);
+		//Sleep(20);
 		_Common::gotoXY(_size * 4 + _left + 1, i + _top);
 		if (i % 2 != 0)
 			putchar(186);
@@ -109,7 +109,7 @@ void _Board::drawBoard()
 	for (short i = 1; i < _size * 4; i++)
 	{
 		_Common::gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
-		Sleep(10);
+		//Sleep(10);
 		if (i % 4 == 0)
 			putchar(207);
 		else
@@ -121,7 +121,7 @@ void _Board::drawBoard()
 	//Ve duong ben trai
 	for (short i = 1; i < _size * 2; i++)
 	{
-		Sleep(20);
+		//Sleep(20);
 		_Common::gotoXY(_left + 1, _size * 2 + _top - i);
 		if (i % 2 != 0)
 			putchar(186);
@@ -140,7 +140,7 @@ void _Board::drawBoard()
 				putchar(179);
 			}
 		}
-		Sleep(20);
+		//Sleep(20);
 	}
 
 	//Ve cac duong ngang
@@ -154,7 +154,7 @@ void _Board::drawBoard()
 			else
 				putchar(196);
 		}
-		Sleep(10);
+		//Sleep(10);
 	}
 }
 
