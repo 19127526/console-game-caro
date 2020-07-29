@@ -1,5 +1,6 @@
 #include "_Game.h"
-
+#include <iostream>
+using namespace std;
 _Game::_Game(char pSize, short pLeft, short pTop) : _x(pLeft), _y(pTop)
 {
 	_b = new _Board(pSize, pLeft, pTop);
@@ -140,13 +141,13 @@ int _Game::processFinish()
 	switch (pWhoWin)
 	{
 	case -1:
-		printf("The player %d won and the player %d lost\n", true, false);
+		cout << "The player 1 Win";
 		break;
 	case 1:
-		printf("The player %d won and the player %d lost\n", false, true);
+		cout<< "The player 2 Win";
 		break;
 	case 0:
-		printf("The player %d draw with the player %d\n", false, true);
+		cout <<"2 players Draw";
 		break;
 	case 2:
 		_turn = !_turn; // change turn if nothing happen

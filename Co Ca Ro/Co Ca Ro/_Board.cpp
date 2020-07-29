@@ -1,4 +1,4 @@
-#include "_Board.h"
+﻿#include "_Board.h"
 
 _Board::_Board(const char& p_size, const short& pX, const short& pY) :
 	_size(p_size), _left(pX), _top(pY)
@@ -94,7 +94,7 @@ void _Board::drawBoard()
 	//Ve duong ben phai
 	for (short i = 1; i < _size * 2; i++)
 	{
-		Sleep(20);
+		//Sleep(20);
 		_Common::gotoXY(_size * 4 + _left + 1, i + _top);
 		if (i % 2 != 0)
 			putchar(186);
@@ -109,7 +109,7 @@ void _Board::drawBoard()
 	for (short i = 1; i < _size * 4; i++)
 	{
 		_Common::gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
-		Sleep(10);
+		//Sleep(10);
 		if (i % 4 == 0)
 			putchar(207);
 		else
@@ -140,7 +140,7 @@ void _Board::drawBoard()
 				putchar(179);
 			}
 		}
-		Sleep(20);
+	//	Sleep(20);
 	}
 
 	//Ve cac duong ngang
@@ -154,7 +154,7 @@ void _Board::drawBoard()
 			else
 				putchar(196);
 		}
-		Sleep(10);
+		//Sleep(10);
 	}
 }
 
@@ -204,13 +204,17 @@ int _Board::testBoard(int pX, int pY) //i,j la dong,cot cua bang
 			}
 		}
 	}();
-
-	if (i == 0 && j == 0)
-		return 1;
-
-	if (i == _size - 1 && j == _size - 1)
-		return -1;
-
+	int turn = _pArr[i][j].getCheck();
+	if (turn == 1)
+	{
+		if (checkWin(i, j, turn))
+			return 1;
+	}
+	else
+	{
+		if (checkWin(i, j, turn))
+			return -1;
+	}
 	return 2; // continue
 }
 
@@ -226,4 +230,68 @@ bool _Board::isPlacedAtXY(int pX, int pY)
 			}
 		}
 	}
+}
+
+
+bool _Board::checkWin(int i, int j, int check) {
+	int tren, duoi, trai, phai;
+	int d = 0, k = i, h;
+	// kiểm tra hàng
+	while (k != _size - 1 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
+	{
+		d++;
+		k++;
+		//phai = k;
+	}
+	k = i - 1;
+	while (k != 0 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
+		d++;
+		k--;
+		trai = k;
+	}
+	//if (d > 4 && _pArr[trai - 2][j].getCheck() == _pArr[trai + 4][j].getCheck() && _pArr[trai - 2][j].getCheck() != check)
+	if (d > 4)
+		return true;
+	d = 0; h = j;
+	// kiểm tra cột
+	while (h != _size - 1 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
+		d++;
+		h++;
+	}
+	h = j - 1;
+	while (h != 0 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
+		d++;
+		h--;
+	}
+	if (d > 4) return true;
+	// kiểm tra đường chéo 1
+	h = i; k = j; d = 0;
+	while (k != _size - 1 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
+		d++;
+		h++;
+		k++;
+	}
+	h = i - 1; k = j - 1;
+	while (h != 0 && k >= 0 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
+		d++;
+		h--;
+		k--;
+	}
+	if (d > 4) return true;
+	// kiểm tra đường chéo 2
+	h = i; k = j; d = 0;
+	while (k != 0 && h != _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
+		d++;
+		h++;
+		k--;
+	}
+	h = i - 1; k = j + 1;
+	while (h != 0 && k != _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
+		d++;
+		h--;
+		k++;
+	}
+	if (d > 4) return true;
+	// nếu không đương chéo nào thỏa mãn thì trả về false.
+	return false;
 }

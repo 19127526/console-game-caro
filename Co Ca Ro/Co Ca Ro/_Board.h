@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <stdio.h>
 #include "_Point.h"
 #include "_Common.h"
@@ -23,4 +23,6 @@ public:
 	int checkBoard(int, int, bool);
 	int testBoard(int, int);
 	bool isPlacedAtXY(int, int);
+	bool checkWin(int i, int j, int check);
+	
 };
