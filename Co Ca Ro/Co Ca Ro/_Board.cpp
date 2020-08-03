@@ -78,7 +78,7 @@ void _Board::drawBoard()
 	}
 
 	//Ve duong tren
-	_Common::gotoXY(_left + 1, _top); 
+	_Common::gotoXY(_left + 1, _top);
 	putchar(201);
 	for (short i = 1; i < _size * 4; i++)
 	{
@@ -140,7 +140,7 @@ void _Board::drawBoard()
 				putchar(179);
 			}
 		}
-	//	Sleep(20);
+		//	Sleep(20);
 	}
 
 	//Ve cac duong ngang
@@ -204,17 +204,16 @@ int _Board::testBoard(int pX, int pY) //i,j la dong,cot cua bang
 			}
 		}
 	}();
-	int turn = _pArr[i][j].getCheck();
-	if (turn == 1)
+	int turn1 = _pArr[i][j].getCheck();
+	if (turn1 == 1)
 	{
-		if (checkWin(i, j, turn))
+		if (checkWin(i, j, turn1))
 			return 1;
 	}
 	else
-	{
-		if (checkWin(i, j, turn))
+		if (checkWin(i, j, turn1))
 			return -1;
-	}
+
 	return 2; // continue
 }
 
@@ -232,19 +231,19 @@ bool _Board::isPlacedAtXY(int pX, int pY)
 	}
 }
 
-
 bool _Board::checkWin(int i, int j, int check) {
 	int tren, duoi, trai, phai;
+
 	int d = 0, k = i, h;
 	// kiểm tra hàng
-	while (k != _size - 1 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
+	while (k <= _size - 1 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
 	{
 		d++;
 		k++;
 		//phai = k;
 	}
 	k = i - 1;
-	while (k != 0 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
+	while (k >= 0 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
 		d++;
 		k--;
 		trai = k;
@@ -254,25 +253,25 @@ bool _Board::checkWin(int i, int j, int check) {
 		return true;
 	d = 0; h = j;
 	// kiểm tra cột
-	while (h != _size - 1 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
+	while (h <= _size - 1 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
 		d++;
 		h++;
 	}
 	h = j - 1;
-	while (h != 0 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
+	while (h >= 0 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
 		d++;
 		h--;
 	}
 	if (d > 4) return true;
 	// kiểm tra đường chéo 1
 	h = i; k = j; d = 0;
-	while (k != _size - 1 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
+	while (k <= _size - 1 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
 		d++;
 		h++;
 		k++;
 	}
 	h = i - 1; k = j - 1;
-	while (h != 0 && k >= 0 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
+	while (h >= 0 && k >= 0 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
 		d++;
 		h--;
 		k--;
@@ -280,13 +279,13 @@ bool _Board::checkWin(int i, int j, int check) {
 	if (d > 4) return true;
 	// kiểm tra đường chéo 2
 	h = i; k = j; d = 0;
-	while (k != 0 && h != _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
+	while (k >= 0 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
 		d++;
 		h++;
 		k--;
 	}
 	h = i - 1; k = j + 1;
-	while (h != 0 && k != _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
+	while (h >= 0 && k <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
 		d++;
 		h--;
 		k++;
