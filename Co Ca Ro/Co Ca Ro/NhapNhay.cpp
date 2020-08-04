@@ -18,7 +18,7 @@ inline void firstLine(bool swap, int i)
 	for (int j = 0; j < 8; j++)
 	{
 		_Common::gotoXY(j * 14 + 5, (i % 6) * 6);
-		(j % 2 == swap) ? callX() : callO();
+		(j % 2 == (int)swap) ? callX() : callO();
 	}
 }
 
@@ -27,7 +27,7 @@ inline void secondLine(bool swap, int i)
 	for (int j = 0; j < 7; j++)
 	{
 		_Common::gotoXY(j * 14 + 12, (i % 6 + 1) * 6);
-		(j % 2 == swap) ? callO() : callX();
+		(j % 2 == (int)swap) ? callO() : callX();
 	}
 }
 

@@ -5,7 +5,7 @@
 //#include "VeMenu.cpp"
 
 #define SIZE 14
-#define LEFT 2
+#define LEFT 25
 #define TOP 1
 
 using namespace std;
@@ -17,5 +17,5 @@ int main()
 	//NhapNhay();
 	_Game g(SIZE, LEFT, TOP);
 	g.startGame();
-	Sleep(100000000000);
+	Sleep(100000000);
 }

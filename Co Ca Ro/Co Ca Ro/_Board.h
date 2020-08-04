@@ -11,7 +11,7 @@ private:
 	int _countX, _countO;
 	_Point** _pArr;
 public:
-	_Board(const char&, const short&, const short&);
+	_Board(const char&, const int&, const int&);
 	~_Board();
 	int getSize();
 	int getLeft();

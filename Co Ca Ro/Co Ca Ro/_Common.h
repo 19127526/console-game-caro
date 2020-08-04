@@ -27,10 +27,10 @@ public:
 	//_Common();
 	//~_Common();
 	static void setConsoleWindow();
-	static void gotoXY(short, short);
+	static void gotoXY(int, int);
 	static void movCenterAndRes();
 	static void setConsoleColor(int, int);
-	static void hideScrollBar();
+	static void hideScrollBars();
 	static void setConsoleTitle();
 	static void disableMaximize();
 	static void showCursor(bool);

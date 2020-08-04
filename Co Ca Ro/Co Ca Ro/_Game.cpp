@@ -1,7 +1,7 @@
 #include "_Game.h"
 #include <iostream>
 using namespace std;
-_Game::_Game(char pSize, short pLeft, short pTop) : _x(pLeft), _y(pTop)
+_Game::_Game(char pSize, int pLeft, int pTop) : _x(pLeft), _y(pTop)
 {
 	_b = new _Board(pSize, pLeft, pTop);
 	_loop = _turn = _changeTurn = true;
@@ -68,6 +68,7 @@ void _Game::startGame()
 	_Common::clearConsole();
 	_b->resetData(); // Setting the original data
 	_b->drawBoard(); // Draw boad
+	drawProfile();
 	_x = _b->getXAt(5, 6);
 	_y = _b->getYAt(5, 6);
 	_Common::gotoXY(_x, _y);
@@ -250,3 +251,20 @@ void _Game::printTurnChar()
 	}
 }
 	
+
+void _Game::drawProfile()
+{
+	for (int i = 0; i < 25; i++)
+	{
+		_Common::gotoXY(3, 3 + i);
+		for (int k = 0; k < 19; k++)
+		{
+			putchar(32);
+		}
+		_Common::gotoXY(87, 3 + i);
+		for (int k = 0; k < 19; k++)
+		{
+			putchar(32);
+		}
+	}
+}

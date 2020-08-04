@@ -8,13 +8,13 @@ class _Game
 private:
 	_Board* _b;// a board game
 	bool _turn;// turn: true for the 1
-	short _x, _y; // current position of cursor
+	int _x, _y; // current position of cursor
 	int _command; // input-key from the players
 	bool _changeTurn;
 	bool _loop;
 	bool _showCursor;
 public:
-	_Game(char, short, short);
+	_Game(char, int, int);
 	~_Game();
 	bool isContinue();
 	char askContinue();
@@ -28,4 +28,6 @@ public:
 	void moveUp();
 	void moveDown();
 	void printTurnChar();
+
+	void drawProfile();
 };

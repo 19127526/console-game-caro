@@ -19,13 +19,13 @@ void _Common::setConsoleWindow()
 	movCenterAndRes();
 	disableMaximize();
 	setConsoleTitle();
-	hideScrollBar();
+	hideScrollBars();
 	showCursor(false);
 }
 
-void _Common::gotoXY(short pX, short pY)
+void _Common::gotoXY(int pX, int pY)
 {
-	SetConsoleCursorPosition(consoleOutput, COORD{ pX, pY });
+	SetConsoleCursorPosition(consoleOutput, COORD{ (short)pX, (short)pY });
 }
 
 void _Common::movCenterAndRes()
@@ -44,7 +44,7 @@ void _Common::setConsoleColor(int background, int foreground)
 	SetConsoleTextAttribute(consoleOutput, background * 16 + foreground);
 }
 
-void _Common::hideScrollBar()
+void _Common::hideScrollBars()
 {
 	ShowScrollBar(consoleWindow, SB_BOTH, 0);
 }

@@ -1,6 +1,6 @@
 ﻿#include "_Board.h"
 
-_Board::_Board(const char& p_size, const short& pX, const short& pY) :
+_Board::_Board(const char& p_size, const int& pX, const int& pY) :
 	_size(p_size), _left(pX), _top(pY)
 {
 	_pArr = new _Point * [p_size];
@@ -68,10 +68,10 @@ void _Board::drawBoard()
 	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 
 	//ve khung trang
-	for (short i = 0; i < _size * 2 + 1; i++)
+	for (int i = 0; i < _size * 2 + 1; i++)
 	{
 		_Common::gotoXY(_left, _top + i);
-		for (short k = 0; k < _size * 4 + 3; k++)
+		for (int k = 0; k < _size * 4 + 3; k++)
 		{
 			putchar(32);
 		}
@@ -80,9 +80,9 @@ void _Board::drawBoard()
 	//Ve duong tren
 	_Common::gotoXY(_left + 1, _top);
 	putchar(201);
-	for (short i = 1; i < _size * 4; i++)
+	for (int i = 1; i < _size * 4; i++)
 	{
-		Sleep(10);
+		//Sleep(10);
 		if (i % 4 == 0)
 			putchar(209);
 		else
@@ -92,7 +92,7 @@ void _Board::drawBoard()
 
 
 	//Ve duong ben phai
-	for (short i = 1; i < _size * 2; i++)
+	for (int i = 1; i < _size * 2; i++)
 	{
 		//Sleep(20);
 		_Common::gotoXY(_size * 4 + _left + 1, i + _top);
@@ -106,7 +106,7 @@ void _Board::drawBoard()
 
 
 	//Ve duong duoi
-	for (short i = 1; i < _size * 4; i++)
+	for (int i = 1; i < _size * 4; i++)
 	{
 		_Common::gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
 		//Sleep(10);
@@ -119,9 +119,9 @@ void _Board::drawBoard()
 	putchar(200);
 
 	//Ve duong ben trai
-	for (short i = 1; i < _size * 2; i++)
+	for (int i = 1; i < _size * 2; i++)
 	{
-		Sleep(20);
+		//Sleep(20);
 		_Common::gotoXY(_left + 1, _size * 2 + _top - i);
 		if (i % 2 != 0)
 			putchar(186);
@@ -130,9 +130,9 @@ void _Board::drawBoard()
 	}
 
 	//Ve cac duong doc
-	for (short i = 1; i < _size * 2; i++)
+	for (int i = 1; i < _size * 2; i++)
 	{
-		for (short j = 4; j < _size * 4; j += 4)
+		for (int j = 4; j < _size * 4; j += 4)
 		{
 			if (i % 2 != 0)
 			{
@@ -144,9 +144,9 @@ void _Board::drawBoard()
 	}
 
 	//Ve cac duong ngang
-	for (short i = 1; i < _size * 4; i++)
+	for (int i = 1; i < _size * 4; i++)
 	{
-		for (short j = 2; j < _size * 2; j += 2)
+		for (int j = 2; j < _size * 2; j += 2)
 		{
 			_Common::gotoXY(i + _left + 1, j + _top);
 			if (i % 4 == 0)
@@ -186,6 +186,7 @@ int _Board::checkBoard(int pX, int pY, bool pTurn)
 			}
 		}
 	}
+	throw "Problem with cursor";
 }
 
 int _Board::testBoard(int pX, int pY) //i,j la dong,cot cua bang
@@ -229,6 +230,7 @@ bool _Board::isPlacedAtXY(int pX, int pY)
 			}
 		}
 	}
+	throw "Problem with cursor";
 }
 
 bool _Board::checkWin(int i, int j, int check) {
