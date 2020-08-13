@@ -24,5 +24,8 @@ public:
 	int testBoard(int, int);
 	bool isPlacedAtXY(int, int);
 	bool checkWin(int i, int j, int check);
-	
+	/*bool CheckHang(int i, int j, int check);
+	bool CheckCot(int i, int j, int check);
+	bool CheckCheo1(int i, int j, int check);
+	bool CheckCheo2(int i, int j, int check);*/
 };

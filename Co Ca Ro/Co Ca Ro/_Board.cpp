@@ -233,66 +233,532 @@ bool _Board::isPlacedAtXY(int pX, int pY)
 	throw "Problem with cursor";
 }
 
-bool _Board::checkWin(int i, int j, int check) {
-	int tren, duoi, trai, phai;
+//bool _Board::CheckHang(int i, int j, int check) // Kiem tra hang
+//{
+//	int d = 0, k = i, h, duoi = 0, tren  = 0, phai  =0;
+//	while (k <= _size - 1 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
+//	{
+//		if (k == _size - 1)
+//		{
+//			d++;
+//			duoi = k;
+//			break;
+//		}
+//		else
+//		{
+//			d++;
+//			k++;
+//			duoi = k;
+//		}
+//	}
+//	d--;
+//	k = i;
+//	while (k >= 0 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
+//	{
+//		if (k == 0)
+//		{
+//			d++;
+//			tren = k;
+//			break;
+//		}
+//		else
+//		{
+//			d++;
+//			k--;
+//			tren = k;
+//		}
+//	}
+//	if (duoi != phai)
+//	{
+//		if (d > 4)
+//		{
+//			if (((duoi == _size - 1) && (_pArr[duoi][j].getCheck() == check)) || ((tren == 0) && (_pArr[tren][j].getCheck() == check)))
+//			{
+//				return true;
+//			}
+//			else if (_pArr[duoi][j].getCheck() == -check && _pArr[tren][j].getCheck() != -check)
+//			{
+//				return true;
+//			}
+//			else if (_pArr[tren][j].getCheck() == -check && _pArr[duoi][j].getCheck() != -check)
+//			{
+//				return true;
+//			}
+//			else if ((_pArr[tren][j].getCheck() == _pArr[duoi][j].getCheck() && _pArr[duoi][j].getCheck() != -check))
+//			{
+//				return true;
+//			}
+//			else if ((_pArr[tren][j].getCheck() == _pArr[duoi][j].getCheck() && _pArr[duoi][j].getCheck() == -check))
+//			{
+//
+//			}
+//		}
+//	}
+//}
+//bool _Board::CheckCot(int i, int j, int check)
+//{
+//	int d = 0, h = j, phai, trai;
+//	while (h <= _size - 1 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
+//	{
+//		if (h == _size - 1)
+//		{
+//			d++;
+//			phai = h;
+//			break;
+//		}
+//		else
+//		{
+//			d++;
+//			h++;
+//			phai = h;
+//		}
+//	}
+//	d--;
+//	h = j;
+//	while (h >= 0 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
+//	{
+//		if (h == 0)
+//		{
+//			d++;
+//			trai = h;
+//			break;
+//		}
+//		else
+//		{
+//			d++;
+//			h--;
+//			trai = h;
+//		}
+//	}
+//	if (d > 4)
+//	{
+//		if (((phai == _size - 1) && (_pArr[i][phai].getCheck() == check)) || ((trai == 0) && (_pArr[i][trai].getCheck() == check)))
+//		{
+//			return true;
+//		}
+//		if ((_pArr[i][trai].getCheck() == _pArr[i][phai].getCheck() && _pArr[i][phai].getCheck() == -check))
+//		{
+//
+//		}
+//		else if (_pArr[i][phai].getCheck() == -check && _pArr[i][trai].getCheck() != -check)
+//		{
+//			return true;
+//		}
+//		else if (_pArr[i][trai].getCheck() == -check && _pArr[i][phai].getCheck() != -check)
+//		{
+//			return true;
+//		}
+//		else if ((_pArr[i][trai].getCheck() == _pArr[i][phai].getCheck() && _pArr[i][phai].getCheck() != -check))
+//		{
+//			return true;
+//		}
+//	}
+//}
+//bool _Board::CheckCheo1(int i, int j, int check)
+//{
+//	int cotduoiphai = 0, hangduoiphai = 0, cottrentrai = 0, hangtrentrai = 0;
+//	int h = i, k = j, d = 0;
+//	while (k <= _size - 1 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check)
+//	{
+//		if ((k == _size - 1 && h == _size - 1) || (k == _size - 1) || (h == _size - 1))
+//		{
+//			d++;
+//			cotduoiphai = k;
+//			hangduoiphai = h;
+//			break;
+//		}
+//		else
+//		{
+//			d++;
+//			h++;
+//			k++;
+//			cotduoiphai = k;
+//			hangduoiphai = h;
+//		}
+//	}
+//	h = i; k = j, d--;
+//	while (h >= 0 && k >= 0 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check)
+//	{
+//		if ((k == 0 && h == 0) || (k == 0) || (h == 0))
+//		{
+//			d++;
+//			cottrentrai = k;
+//			hangtrentrai = h;
+//			break;
+//		}
+//		else
+//		{
+//			d++;
+//			h--;
+//			k--;
+//			cottrentrai = k;
+//			hangtrentrai = h;
+//		}
+//	}
+//	if (d > 4)
+//	{
+//		if (((cotduoiphai == _size - 1) && (_pArr[hangduoiphai][cotduoiphai].getCheck() == check)) || ((cottrentrai == 0) && (_pArr[hangtrentrai][cottrentrai].getCheck() == check)))
+//		{
+//			return true;
+//		}
+//		else if (((hangduoiphai == _size - 1) && (_pArr[hangduoiphai][cotduoiphai].getCheck() == check)) || ((hangtrentrai == 0) && (_pArr[hangtrentrai][cottrentrai].getCheck() == check)))
+//		{
+//			return true;
+//		}
+//		if ((_pArr[hangtrentrai][cottrentrai].getCheck() == _pArr[hangduoiphai][cotduoiphai].getCheck() && _pArr[hangduoiphai][cotduoiphai].getCheck() == -check))
+//		{
+//
+//		}
+//		else if (_pArr[hangduoiphai][cotduoiphai].getCheck() == -check && _pArr[hangtrentrai][cottrentrai].getCheck() != -check)
+//		{
+//			return true;
+//		}
+//		else if (_pArr[hangtrentrai][cottrentrai].getCheck() == -check && _pArr[hangduoiphai][cotduoiphai].getCheck() != -check)
+//		{
+//			return true;
+//		}
+//		else if ((_pArr[hangtrentrai][cottrentrai].getCheck() == _pArr[hangduoiphai][cotduoiphai].getCheck() && _pArr[hangduoiphai][cotduoiphai].getCheck() != -check))
+//		{
+//			return true;
+//		}
+//	}
+//}
+//bool _Board::CheckCheo2(int i, int j, int check)
+//{
+//	int hangduoitrai = 0, cotduoitrai = 0, hangtrenphai = 0, cottrenphai = 0;
+//	int h = i, k = j, d = 0;
+//	while (k >= 0 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check)
+//	{
+//		if ((k == 0 && h == _size - 1) || (k == 0) || (h == _size - 1))
+//		{
+//			d++;
+//			cotduoitrai = k;
+//			hangduoitrai = h;
+//			break;
+//		}
+//		else
+//		{
+//			d++;
+//			h++;
+//			k--;
+//			cotduoitrai = k;
+//			hangduoitrai = h;
+//		}
+//	}
+//	h = i; k = j, d--;
+//	while (h >= 0 && k <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check)
+//	{
+//		if ((h == 0 && k == _size - 1) || (k == _size - 1) || (h == 0))
+//		{
+//			d++;
+//			hangtrenphai = h;
+//			cottrenphai = k;
+//			break;
+//		}
+//		else
+//		{
+//			d++;
+//			h--;
+//			k++;
+//			hangtrenphai = h;
+//			cottrenphai = k;
+//		}
+//	}
+//	if (d > 4)
+//	{
+//		if (((cotduoitrai == 0) && (_pArr[hangduoitrai][cotduoitrai].getCheck() == check)) || ((cottrenphai == _size - 1) && (_pArr[hangtrenphai][cottrenphai].getCheck() == check)))
+//		{
+//			return true;
+//		}
+//		else if (((hangduoitrai == _size - 1) && (_pArr[hangduoitrai][cotduoitrai].getCheck() == check)) || ((hangtrenphai == 0) && (_pArr[hangtrenphai][cottrenphai].getCheck() == check)))
+//		{
+//			return true;
+//		}
+//		if ((_pArr[hangtrenphai][cottrenphai].getCheck() == _pArr[hangduoitrai][cotduoitrai].getCheck() && _pArr[hangduoitrai][cotduoitrai].getCheck() == -check))
+//		{
+//
+//		}
+//		else if (_pArr[hangduoitrai][cotduoitrai].getCheck() == -check && _pArr[hangtrenphai][cottrenphai].getCheck() != -check)
+//		{
+//			return true;
+//		}
+//		else if (_pArr[hangtrenphai][cottrenphai].getCheck() == -check && _pArr[hangduoitrai][cotduoitrai].getCheck() != -check)
+//		{
+//			return true;
+//		}
+//		else if ((_pArr[hangtrenphai][cottrenphai].getCheck() == _pArr[hangduoitrai][cotduoitrai].getCheck() && _pArr[hangduoitrai][cotduoitrai].getCheck() != -check))
+//		{
+//			return true;
+//		}
+//	}
+//}
+//
+//bool _Board::checkWin(int i, int j, int check)
+//{
+//	int a = i, b = j;
+//	if (CheckHang(a, b, check))
+//		return true;
+//	if(CheckCot(a, b, check))
+//		return true;
+//	if(CheckCheo1(a, b, check))
+//		return true;
+//	if(CheckCheo2(a, b, check))
+//		return true;
+//	return false;
+//}
 
+bool _Board::checkWin(int i, int j, int check) {
+	int tren = 0, duoi = 0, trai = 0, phai = 0;
 	int d = 0, k = i, h;
 	// kiểm tra hàng
 	while (k <= _size - 1 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
 	{
-		d++;
-		k++;
-		//phai = k;
+		if (k == _size - 1)
+		{
+			d++;
+			duoi = k;
+			break;
+		}
+		else
+		{
+			d++;
+			k++;
+			duoi = k;
+		}
 	}
-	k = i - 1;
-	while (k >= 0 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
-		d++;
-		k--;
-		trai = k;
+	d--;
+	k = i;
+	while (k >= 0 && _pArr[k][j].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
+	{
+		if (k == 0)
+		{
+			d++;
+			tren = k;
+			break;
+		}
+		else
+		{
+			d++;
+			k--;
+			tren = k;
+		}
 	}
-	//if (d > 4 && _pArr[trai - 2][j].getCheck() == _pArr[trai + 4][j].getCheck() && _pArr[trai - 2][j].getCheck() != check)
-	if (d > 4)
-		return true;
+	if (duoi != phai)
+	{
+		if (d > 4)
+		{
+			if (((duoi == _size - 1) && (_pArr[duoi][j].getCheck() == check)) || ((tren == 0) && (_pArr[tren][j].getCheck() == check)))
+			{
+				return true;
+			}
+			else if (_pArr[duoi][j].getCheck() == -check && _pArr[tren][j].getCheck() != -check)
+			{
+				return true;
+			}
+			else if (_pArr[tren][j].getCheck() == -check && _pArr[duoi][j].getCheck() != -check)
+			{
+				return true;
+			}
+			else if ((_pArr[tren][j].getCheck() == _pArr[duoi][j].getCheck() && _pArr[duoi][j].getCheck() != -check))
+			{
+				return true;
+			}
+			else if ((_pArr[tren][j].getCheck() == _pArr[duoi][j].getCheck() && _pArr[duoi][j].getCheck() == -check))
+			{
+
+			}
+		}
+	}
 	d = 0; h = j;
 	// kiểm tra cột
-	while (h <= _size - 1 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
-		d++;
-		h++;
+	while (h <= _size - 1 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
+	{
+		if (h == _size - 1)
+		{
+			d++;
+			phai = h;
+			break;
+		}
+		else
+		{
+			d++;
+			h++;
+			phai = h;
+		}
 	}
-	h = j - 1;
-	while (h >= 0 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check) {
-		d++;
-		h--;
+	d--;
+	h = j;
+	while (h >= 0 && _pArr[i][h].getCheck() == _pArr[i][j].getCheck() && _pArr[i][j].getCheck() == check)
+	{
+		if (h == 0)
+		{
+			d++;
+			trai = h;
+			break;
+		}
+		else
+		{
+			d++;
+			h--;
+			trai = h;
+		}
 	}
-	if (d > 4) return true;
+	if (d > 4)
+	{
+		if (((phai == _size - 1) && (_pArr[i][phai].getCheck() == check)) || ((trai == 0) && (_pArr[i][trai].getCheck() == check)))
+		{
+			return true;
+		}
+		if ((_pArr[i][trai].getCheck() == _pArr[i][phai].getCheck() && _pArr[i][phai].getCheck() == -check))
+		{
+
+		}
+		else if (_pArr[i][phai].getCheck() == -check && _pArr[i][trai].getCheck() != -check)
+		{
+			return true;
+		}
+		else if (_pArr[i][trai].getCheck() == -check && _pArr[i][phai].getCheck() != -check)
+		{
+			return true;
+		}
+		else if ((_pArr[i][trai].getCheck() == _pArr[i][phai].getCheck() && _pArr[i][phai].getCheck() != -check))
+		{
+			return true;
+		}
+	}
+	int cotduoiphai = 0, hangduoiphai = 0, cottrentrai = 0, hangtrentrai = 0;
 	// kiểm tra đường chéo 1
 	h = i; k = j; d = 0;
-	while (k <= _size - 1 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
-		d++;
-		h++;
-		k++;
+	while (k <= _size - 1 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check)
+	{
+		if ((k == _size - 1 && h == _size - 1) || (k == _size - 1) || (h == _size - 1))
+		{
+			d++;
+			cotduoiphai = k;
+			hangduoiphai = h;
+			break;
+		}
+		else
+		{
+			d++;
+			h++;
+			k++;
+			cotduoiphai = k;
+			hangduoiphai = h;
+		}
 	}
-	h = i - 1; k = j - 1;
-	while (h >= 0 && k >= 0 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
-		d++;
-		h--;
-		k--;
+	h = i; k = j, d--;
+	while (h >= 0 && k >= 0 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check)
+	{
+		if ((k == 0 && h == 0) || (k == 0) || (h == 0))
+		{
+			d++;
+			cottrentrai = k;
+			hangtrentrai = h;
+			break;
+		}
+		else
+		{
+			d++;
+			h--;
+			k--;
+			cottrentrai = k;
+			hangtrentrai = h;
+		}
 	}
-	if (d > 4) return true;
+	if (d > 4)
+	{
+		if (((cotduoiphai == _size - 1) && (_pArr[hangduoiphai][cotduoiphai].getCheck() == check)) || ((cottrentrai == 0) && (_pArr[hangtrentrai][cottrentrai].getCheck() == check)))
+		{
+			return true;
+		}
+		else if (((hangduoiphai == _size - 1) && (_pArr[hangduoiphai][cotduoiphai].getCheck() == check)) || ((hangtrentrai == 0) && (_pArr[hangtrentrai][cottrentrai].getCheck() == check)))
+		{
+			return true;
+		}
+		if ((_pArr[hangtrentrai][cottrentrai].getCheck() == _pArr[hangduoiphai][cotduoiphai].getCheck() && _pArr[hangduoiphai][cotduoiphai].getCheck() == -check))
+		{
+
+		}
+		else if (_pArr[hangduoiphai][cotduoiphai].getCheck() == -check && _pArr[hangtrentrai][cottrentrai].getCheck() != -check)
+		{
+			return true;
+		}
+		else if (_pArr[hangtrentrai][cottrentrai].getCheck() == -check && _pArr[hangduoiphai][cotduoiphai].getCheck() != -check)
+		{
+			return true;
+		}
+		else if ((_pArr[hangtrentrai][cottrentrai].getCheck() == _pArr[hangduoiphai][cotduoiphai].getCheck() && _pArr[hangduoiphai][cotduoiphai].getCheck() != -check))
+		{
+			return true;
+		}
+	}
+	int hangduoitrai = 0, cotduoitrai = 0, hangtrenphai = 0, cottrenphai = 0;
 	// kiểm tra đường chéo 2
 	h = i; k = j; d = 0;
-	while (k >= 0 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
-		d++;
-		h++;
-		k--;
+	while (k >= 0 && h <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check)
+	{
+		if ((k == 0 && h == _size - 1) || (k == 0) || (h == _size - 1))
+		{
+			d++;
+			cotduoitrai = k;
+			hangduoitrai = h;
+			break;
+		}
+		else
+		{
+			d++;
+			h++;
+			k--;
+			cotduoitrai = k;
+			hangduoitrai = h;
+		}
 	}
-	h = i - 1; k = j + 1;
-	while (h >= 0 && k <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check) {
-		d++;
-		h--;
-		k++;
+	h = i; k = j, d--;
+	while (h >= 0 && k <= _size - 1 && _pArr[i][j].getCheck() == _pArr[h][k].getCheck() && _pArr[h][k].getCheck() == check)
+	{
+		if ((h == 0 && k == _size - 1) || (k == _size - 1) || (h == 0))
+		{
+			d++;
+			hangtrenphai = h;
+			cottrenphai = k;
+			break;
+		}
+		else
+		{
+			d++;
+			h--;
+			k++;
+			hangtrenphai = h;
+			cottrenphai = k;
+		}
 	}
-	if (d > 4) return true;
-	// nếu không đương chéo nào thỏa mãn thì trả về false.
+	if (d > 4)
+	{
+		if (((cotduoitrai == 0) && (_pArr[hangduoitrai][cotduoitrai].getCheck() == check)) || ((cottrenphai == _size - 1) && (_pArr[hangtrenphai][cottrenphai].getCheck() == check)))
+		{
+			return true;
+		}
+		else if (((hangduoitrai == _size - 1) && (_pArr[hangduoitrai][cotduoitrai].getCheck() == check)) || ((hangtrenphai == 0) && (_pArr[hangtrenphai][cottrenphai].getCheck() == check)))
+		{
+			return true;
+		}
+		if ((_pArr[hangtrenphai][cottrenphai].getCheck() == _pArr[hangduoitrai][cotduoitrai].getCheck() && _pArr[hangduoitrai][cotduoitrai].getCheck() == -check))
+		{
+
+		}
+		else if (_pArr[hangduoitrai][cotduoitrai].getCheck() == -check && _pArr[hangtrenphai][cottrenphai].getCheck() != -check)
+		{
+			return true;
+		}
+		else if (_pArr[hangtrenphai][cottrenphai].getCheck() == -check && _pArr[hangduoitrai][cotduoitrai].getCheck() != -check)
+		{
+			return true;
+		}
+		else if ((_pArr[hangtrenphai][cottrenphai].getCheck() == _pArr[hangduoitrai][cotduoitrai].getCheck() && _pArr[hangduoitrai][cotduoitrai].getCheck() != -check))
+		{
+			return true;
+		}
+	}
 	return false;
 }
