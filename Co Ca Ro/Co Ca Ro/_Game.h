@@ -3,6 +3,10 @@
 #include <conio.h>
 #include "_Board.h"
 
+#define SIZE 14
+#define LEFT 25
+#define TOP 1
+
 class _Game
 {
 private:
@@ -14,7 +18,7 @@ private:
 	bool _loop;
 	bool _showCursor;
 public:
-	_Game(char, int, int);
+	_Game();
 	~_Game();
 	bool isContinue();
 	char askContinue();
@@ -28,6 +32,5 @@ public:
 	void moveUp();
 	void moveDown();
 	void printTurnChar();
-
 	void drawProfile();
 };

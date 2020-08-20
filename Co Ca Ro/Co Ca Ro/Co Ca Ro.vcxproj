@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0f77c59a-9429-4e67-9a80-ec28c0640c6f}</ProjectGuid>
+    <ProjectGuid>{973d5e9a-ea53-466d-a931-6108f04dc687}</ProjectGuid>
     <RootNamespace>CoCaRo</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -141,16 +141,17 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NhapNhay.cpp" />
-    <ClCompile Include="VeMenu.cpp" />
     <ClCompile Include="_Board.cpp" />
     <ClCompile Include="_Common.cpp" />
     <ClCompile Include="_Game.cpp" />
+    <ClCompile Include="_Menu.cpp" />
     <ClCompile Include="_Point.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Board.h" />
     <ClInclude Include="_Common.h" />
     <ClInclude Include="_Game.h" />
+    <ClInclude Include="_Menu.h" />
     <ClInclude Include="_Point.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,9 +1,10 @@
 #include "_Game.h"
 #include <iostream>
 using namespace std;
-_Game::_Game(char pSize, int pLeft, int pTop) : _x(pLeft), _y(pTop)
+_Game::_Game()
 {
-	_b = new _Board(pSize, pLeft, pTop);
+	_x = LEFT, _y = TOP;
+	_b = new _Board(SIZE, LEFT, TOP);
 	_loop = _turn = _changeTurn = true;
 	_showCursor = false;
 	_command = -1;

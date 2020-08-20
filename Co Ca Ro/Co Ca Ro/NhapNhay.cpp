@@ -1,6 +1,5 @@
-#include <stdio.h>
 #include "_Common.h"
-
+#include <iostream>
 inline void callX()
 {
 	_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
@@ -33,10 +32,10 @@ inline void secondLine(bool swap, int i)
 
 inline void NhapNhay()
 {
-	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
-	_Common::clearConsole();
+	//_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	//_Common::clearConsole();
 	bool swap = 0;
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		for (int j = 0; j < 6; j += 2)
 		{

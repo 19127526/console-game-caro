@@ -11,7 +11,7 @@ private:
 	int _countX, _countO;
 	_Point** _pArr;
 public:
-	_Board(const char&, const int&, const int&);
+	_Board(int, int, int);
 	~_Board();
 	int getSize();
 	int getLeft();
@@ -23,9 +23,8 @@ public:
 	int checkBoard(int, int, bool);
 	int testBoard(int, int);
 	bool isPlacedAtXY(int, int);
-	bool checkWin(int i, int j, int check);
-	/*bool CheckHang(int i, int j, int check);
-	bool CheckCot(int i, int j, int check);
-	bool CheckCheo1(int i, int j, int check);
-	bool CheckCheo2(int i, int j, int check);*/
+	bool checkHang(int, int, int);
+	bool checkCot(int, int, int);
+	bool checkCheo1(int, int, int);
+	bool checkCheo2(int, int, int);
 };

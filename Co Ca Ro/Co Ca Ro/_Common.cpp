@@ -1,7 +1,7 @@
 #include "_Common.h"
 
-HWND _Common::consoleWindow;
-HANDLE _Common::consoleOutput;
+HWND _Common::consoleWindow = GetConsoleWindow();
+HANDLE _Common::consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
 //_Common::_Common()
 //{
@@ -13,14 +13,13 @@ HANDLE _Common::consoleOutput;
 
 void _Common::setConsoleWindow()
 {
-	consoleWindow = GetConsoleWindow();
-	consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	setFontInfo();
 	movCenterAndRes();
 	disableMaximize();
 	setConsoleTitle();
 	hideScrollBars();
 	showCursor(false);
+	//disableMouseInput();
 }
 
 void _Common::gotoXY(int pX, int pY)
@@ -57,7 +56,7 @@ void _Common::setConsoleTitle()
 void _Common::disableMaximize()
 {
 	SetWindowLong(consoleWindow, GWL_STYLE,
-		GetWindowLong(consoleWindow, GWL_STYLE) & ~(WS_MAXIMIZEBOX));
+		GetWindowLong(consoleWindow, GWL_STYLE) & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME));
 }
 
 void _Common::showCursor(bool show)
@@ -80,4 +79,50 @@ void _Common::setFontInfo()
 void _Common::clearConsole()
 {
 	system("cls");
+}
+
+void _Common::disableMouseInput()
+{
+	DWORD prev_mode;
+	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+	GetConsoleMode(hInput, &prev_mode);
+	SetConsoleMode(hInput, prev_mode & ~ENABLE_QUICK_EDIT_MODE);
+}
+
+int _Common::getConsoleInput()
+{
+	int c = _getch();
+	if (c == 0 || c == 224)
+	{
+		switch (_getch())
+		{
+		case 72: //up arrow
+			return 2;
+		case 75: //left arrow
+			return 3;
+		case 77: //right arrow
+			return 4;
+		case 80: //down arrow
+			return 5;
+		default: //none arrow
+			return 0;
+		}
+	}
+	else
+	{
+		if (c == 27)                  //esc
+			return 1;
+		else if (c == 87 || c == 119) //W, w
+			return 2;
+		else if (c == 65 || c == 97)  //A, a
+			return 3;
+		else if (c == 68 || c == 100) //D, d
+			return 4;
+		else if (c == 83 || c == 115) //S, s
+			return 5;
+		else if (c == 13)             //Enter
+			return 6;
+		else
+			return 0;
+	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include <conio.h>
 
 #define BLACK 0
 #define BLUE 1
@@ -36,4 +37,6 @@ public:
 	static void showCursor(bool);
 	static void setFontInfo();
 	static void clearConsole();
+	static void disableMouseInput();
+	static int getConsoleInput();
 };
