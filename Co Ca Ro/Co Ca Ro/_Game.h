@@ -33,4 +33,10 @@ public:
 	void moveDown();
 	void printTurnChar();
 	void drawProfile();
+	void P1();
+	void P2();
+	void Draw();
+	void P1WIN();
+	void P2WIN();
+	void PDRAW();
 };
