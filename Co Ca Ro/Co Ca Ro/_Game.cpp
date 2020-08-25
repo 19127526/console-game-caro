@@ -63,17 +63,14 @@ void _Game::startGame()
 				_Common::playSound(4);
 			}
 		}
-		else if (_mode == 1)
+		else
 		{
 			do
 			{
-				COORD coord = getRandomCoord();
-				_x = coord.X, _y = coord.Y;
+				COORD coord = (_mode == 1) ? getRandomMove() : getBestMove();
+				_x = _b->getXAt(0, 0) + coord.X * 4;
+				_y = _b->getYAt(0, 0) + coord.Y * 2;
 			} while (!processCheckBoard());
-		}
-		else if (_mode == 2)
-		{
-
 		}
 	}
 }
@@ -275,12 +272,16 @@ void _Game::drawProfile()
 	}
 }
 
-COORD _Game::getRandomCoord()
+COORD _Game::getRandomMove()
 {
 	static random_device rd;
 	static mt19937 mt(rd());
 	static uniform_int_distribution<short> dist(0, _b->getSize() - 1);
-	short x = _b->getXAt(0, 0) + dist(mt) * 4,
-		y = _b->getYAt(0, 0) + dist(mt) * 2;
-	return COORD{ x, y };
+	return COORD{ dist(mt), dist(mt) };
+}
+
+COORD _Game::getBestMove()
+{
+	short i = 13; short j = 13;
+	return COORD{ i,j };
 }

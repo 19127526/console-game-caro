@@ -38,5 +38,6 @@ public:
 	void printP2Win() { };
 	void printDraw() { };
 	void printBotWin() { };
-	COORD getRandomCoord();
+	COORD getRandomMove();
+	COORD getBestMove();
 };

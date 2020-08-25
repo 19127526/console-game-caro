@@ -24,7 +24,7 @@ public:
 	static void exitScreen();
 	static void playPvP();
 	static void playPvC1();
-	static void playPvC2() {};
+	static void playPvC2();
 	static void printLogo();
 	static void goBack() { }
 	static void printOptionsBoard();

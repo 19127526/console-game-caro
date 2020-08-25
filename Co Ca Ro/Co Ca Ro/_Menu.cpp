@@ -347,3 +347,9 @@ void _Menu::playPvC1()
 	_Game g(1);
 	g.startGame();
 }
+
+void _Menu::playPvC2()
+{
+	_Game g(2);
+	g.startGame();
+}
