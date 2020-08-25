@@ -34,7 +34,6 @@ void _Menu::mainScreen()
 			default:
 				_Common::playSound(4);
 				continue;
-				//error sound
 			}
 		}
 
@@ -195,7 +194,7 @@ void _Menu::mainMenu()
 	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	_Common::clearConsole();
 	printLogo();
-	printAnimation();
+	//printAnimation();
 	printOptionsBoard();
 	current_option = -1;
 	fillMenuOptions();
