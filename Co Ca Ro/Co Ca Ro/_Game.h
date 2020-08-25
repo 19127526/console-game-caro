@@ -1,5 +1,6 @@
 #pragma once
-#include <stdio.h>
+#include <iostream>
+#include <Random>
 #include <conio.h>
 #include "_Board.h"
 
@@ -17,8 +18,9 @@ private:
 	bool _changeTurn;
 	bool _loop;
 	bool _showCursor;
+	int _mode; //0 for PvP, 1 for PvC(easy), 2 for PvC(hard)
 public:
-	_Game();
+	_Game(int);
 	~_Game();
 	bool isContinue();
 	char askContinue();
@@ -26,17 +28,15 @@ public:
 	void exitGame(); // Function to exit the game
 	int processFinish();
 	bool processCheckBoard();
-	int getCommand();
 	void moveRight();
 	void moveLeft();
 	void moveUp();
 	void moveDown();
 	void printTurnChar();
 	void drawProfile();
-	void P1();
-	void P2();
-	void Draw();
-	void P1WIN();
-	void P2WIN();
-	void PDRAW();
+	void printP1Win() { };
+	void printP2Win() { };
+	void printDraw() { };
+	void printBotWin() { };
+	COORD getRandomCoord();
 };

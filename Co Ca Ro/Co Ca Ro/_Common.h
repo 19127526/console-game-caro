@@ -1,6 +1,9 @@
 #pragma once
 #include <Windows.h>
+#include <string>
+#include <vector>
 #include <conio.h>
+#pragma comment(lib, "Winmm.lib")
 
 #define BLACK 0
 #define BLUE 1
@@ -18,6 +21,8 @@
 #define LIGHT_PURPLE 13
 #define LIGHT_YELLOW 14
 #define BRIGHT_WHITE 15
+
+using namespace std;
 
 class _Common
 {
@@ -39,4 +44,5 @@ public:
 	static void clearConsole();
 	static void disableMouseInput();
 	static int getConsoleInput();
+	static void playSound(int = 0);
 };
