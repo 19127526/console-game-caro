@@ -34,10 +34,14 @@ public:
 	void moveDown();
 	void printTurnChar();
 	void drawProfile();
-	void printP1Win() { };
-	void printP2Win() { };
-	void printDraw() { };
-	void printBotWin() { };
+	void P1(); // Print WIN P1
+	void P2(); // Print WIN P2
+	void DRAW(); // Print WIN DRAW
+	void COMPUTER(); // Print WIN COMPUTER
+	void P1WIN();
+	void P2WIN();
+	void DRAWWIN();
+	void COMPUTERWIN();
 	COORD getRandomMove();
 	COORD getBestMove();
 };
