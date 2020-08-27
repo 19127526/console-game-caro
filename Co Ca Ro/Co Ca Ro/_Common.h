@@ -32,7 +32,6 @@ private:
 public:
 	//_Common();
 	//~_Common();
-	static void setConsoleWindow();
 	static void gotoXY(int, int);
 	static void movCenterAndRes();
 	static void setConsoleColor(int, int);

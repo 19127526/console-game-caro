@@ -11,17 +11,6 @@ HANDLE _Common::consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 //{
 //}
 
-void _Common::setConsoleWindow()
-{
-	setFontInfo();
-	movCenterAndRes();
-	disableMaximize();
-	setConsoleTitle();
-	hideScrollBars();
-	showCursor(false);
-	//disableMouseInput();
-}
-
 void _Common::gotoXY(int pX, int pY)
 {
 	SetConsoleCursorPosition(consoleOutput, COORD{ (short)pX, (short)pY });

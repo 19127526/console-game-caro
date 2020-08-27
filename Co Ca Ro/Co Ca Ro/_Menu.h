@@ -4,32 +4,31 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include <thread>
-
-
-
+#include <filesystem>
 using namespace std;
 
 class _Menu
 {
 private:
+	static bool exitGame;
 	static int current_option;
 	const static string options[8];
 public:
 	static void mainScreen();
 	static void mainMenu();
 	static void playMenu();
-	static void loadScreen() {}
+	static void loadScreen();
 	static void helpScreen();
 	static void exitScreen();
 	static void playPvP();
-	static void playPvC1();
+	static void playPvC1() {};
 	static void playPvC2();
 	static void printLogo();
-	static void goBack() { }
+	static void goBack() { return; }
 	static void printOptionsBoard();
 	static void fillMenuOptions();
 	static void printAnimation();
 	static void printRectangle(int, int, int, int);
-	static bool changeOption(bool);
+	static void changeOption(bool);
+	static void changeFile(int, vector<string>& fileName, int&);
 };

@@ -5,25 +5,15 @@ _Game::_Game(int mode)
 	_mode = mode;
 	_x = LEFT, _y = TOP;
 	_b = new _Board(SIZE, LEFT, TOP);
-	_loop = _turn = _changeTurn = true;
+	_continue = _turn = _changeTurn = true;
 	_showCursor = false;
-	_command = -1;
+	_p1Name = _p2Name = "";
+	_countP1Win = _countP2Win = 0;
 }
 
 _Game::~_Game()
 {
 	delete _b;
-}
-
-bool _Game::isContinue()
-{
-	return _loop;
-}
-
-char _Game::askContinue()
-{
-	_Common::gotoXY(0, _b->getYAt(_b->getSize() - 1, _b->getSize() - 1) + 4);
-	return 0;//getCommand();
 }
 
 void _Game::startGame()
@@ -36,13 +26,17 @@ void _Game::startGame()
 	_y = _b->getYAt(5, 6);
 	_Common::gotoXY(_x, _y);
 	moveDown();
-	while (isContinue())
+	while (_continue)
 	{
-		if(_mode == 0 || (_turn == 1))
+		if(_mode == 0 || _turn == 1)
 		{
 			switch (_Common::getConsoleInput())
 			{
+			case 0:
+				_Common::playSound(4);
+				break;
 			case 1:
+				_Menu::exitScreen();
 				return;
 			case 2:
 				moveUp();
@@ -55,32 +49,20 @@ void _Game::startGame()
 				break;
 			case 5:
 				moveDown();
-				break;
+				break;	
 			case 6:
 				processCheckBoard();
 				break;
-			default:
-				_Common::playSound(4);
 			}
 		}
 		else
 		{
-			do
-			{
-				COORD coord = (_mode == 1) ? getRandomMove() : getBestMove();
-				_x = _b->getXAt(0, 0) + coord.X * 4;
-				_y = _b->getYAt(0, 0) + coord.Y * 2;
-			} while (!processCheckBoard());
+			_Point p = (_mode == 1) ? _b->PVC_easy() : _b->PVC_hard();
+			moveToDirection(p.getX(), p.getY());
+			processCheckBoard();
 		}
 	}
 }
-
-void _Game::exitGame()
-{
-	system("cls");
-	_loop = false;
-}
-
 
 bool _Game::processCheckBoard()
 {
@@ -121,20 +103,26 @@ int _Game::processFinish()
 	int pWhoWin = _b->testBoard(_x, _y);
 	switch (pWhoWin)
 	{
-	case -1:	
-		P1WIN();	//printP1Win();
+	case -1:
+		_continue = 0;
+		printWinPos();
+		P1WIN();
 		break;
 	case 1:
+		_continue = 0;
+		printWinPos();
 		if (_mode == 1 || _mode == 2)
-			COMPUTERWIN();	//printBotWin();	
+			COMPUTERWIN();
 		else
-			P2WIN();	//printP2Win();	
+			P2WIN();
+		
 		break;
 	case 0:
-		DRAWWIN();	//printDraw();
+		_continue = 0;
+		DRAWWIN();
 		break;
 	case 2:
-		_turn = !_turn;		// change turn if nothing happen
+		_turn = !_turn; // change turn if nothing happen
 		_changeTurn = 1;
 	}
 	_Common::gotoXY(_x, _y);
@@ -272,18 +260,87 @@ void _Game::drawProfile()
 	}
 }
 
-COORD _Game::getRandomMove()
+void _Game::moveToDirection(int x, int y)
 {
-	static random_device rd;
-	static mt19937 mt(rd());
-	static uniform_int_distribution<short> dist(0, _b->getSize() - 1);
-	return COORD{ dist(mt), dist(mt) };
+	while (_x < x)
+	{
+		Sleep(300);
+		moveRight();
+	}
+	while (_x > x)
+	{
+		Sleep(300);
+		moveLeft();
+	}
+	while (_y < y)
+	{
+		Sleep(300);
+		moveDown();
+	}
+	while (_y > y)
+	{
+		Sleep(300);
+		moveUp();
+	}
 }
 
-COORD _Game::getBestMove()
+void _Game::setUpGame(string fileName)
 {
-	short i = 13; short j = 13;
-	return COORD{ i,j };
+	bool open = 1;
+	if (fileName != "")
+	{
+		string fullPath = "load\\" + fileName + ".txt";
+		ifstream inFile(fullPath);
+		getline(inFile,_p1Name);
+		cout << _p1Name << endl;
+		getline(inFile, _p2Name);
+		cout << _p2Name << endl;
+		inFile >> _countP1Win;
+		inFile >> _countP2Win;
+		inFile >> _continue;
+		if (_continue)
+		{
+			_b->loadData(inFile);
+		}
+	}
+	else
+	{
+		_Common::clearConsole();
+		_Menu::printLogo();
+		_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
+		_Common::gotoXY(35, 18);
+		cout << "Enter player 1 name:  ";
+		_Common::showCursor(true);
+		getline(cin, _p1Name);
+		_Common::showCursor(false);
+		if (_mode == 1)
+		{
+			_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
+			_Common::gotoXY(35, 21);
+			cout << "Enter player 2 name:  ";
+			_Common::showCursor(true);
+			getline(cin, _p2Name);
+			_Common::showCursor(false);
+		}
+		else
+		{
+			_p2Name = "Computer";
+		}
+	}
+	cin.get();
+}
+
+void _Game::printWinPos()
+{
+	_Point* win = _b->getWinPos();
+	unsigned int arr[] = { 'D','M','M','T','Q' };
+	for (int i = 0; i < 5; i++)
+	{
+		_Common::gotoXY(win[i].getX(), win[i].getY());
+		putchar(arr[i]);
+	}
+	delete[] win;
+	Sleep(10000);
 }
 
 void Box()
@@ -296,7 +353,7 @@ void Box()
 	cout << "ESC : BACK";
 }
 
-void _Game::P1() 
+void _Game::P1()
 {
 	_Common::setConsoleColor(BRIGHT_WHITE, 0);
 	_Common::clearConsole();
@@ -353,7 +410,7 @@ void _Game::P1WIN()
 	}
 }
 
-void _Game::P2() 
+void _Game::P2()
 {
 	_Common::setConsoleColor(BRIGHT_WHITE, 0);
 	_Common::clearConsole();
@@ -409,7 +466,7 @@ void _Game::P2WIN()
 	}
 }
 
-void _Game::DRAW() 
+void _Game::DRAW()
 {
 	_Common::setConsoleColor(BRIGHT_WHITE, 0);
 	_Common::clearConsole();
@@ -465,7 +522,7 @@ void _Game::DRAWWIN()
 	}
 }
 
-void _Game::COMPUTER() 
+void _Game::COMPUTER()
 {
 	_Common::setConsoleColor(BRIGHT_WHITE, 0);
 	_Common::clearConsole();

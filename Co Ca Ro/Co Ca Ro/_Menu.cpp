@@ -1,5 +1,5 @@
 #include "_Menu.h"
-
+bool _Menu::exitGame = 0;
 int _Menu::current_option;
 const string _Menu::options[8] = { "Play", "Load", "Help", "Exit", " PvP ", "PvC(easy)", "PvC(hard)", "Back" };
 
@@ -14,30 +14,35 @@ void _Menu::mainScreen()
 		{options[5], playPvC1},
 		{options[6], playPvC2},
 		{options[7], goBack} };
-	while (true)
+	//function_map[options[4]]();
+	bool loadMenu = 1;
+	while (!exitGame)
 	{
-		mainMenu();
-		while (true)
+		if(loadMenu)
+			mainMenu();
+		switch(_Common::getConsoleInput())
 		{
-			switch (_Common::getConsoleInput())
-			{
-			case 2:
-				changeOption(0);
-				break;
-			case 5:
-				changeOption(1);
-				break;
-			case 6:
-				_Common::playSound(3);
-				function_map[options[current_option]]();
-				break;
-			default:
-				_Common::playSound(4);
-				continue;
-			}
+		case 0:
+			_Common::playSound(4); //wrong key sound
+			loadMenu = 0;
+			break;
+		case 2:
+			changeOption(0);
+			loadMenu = 0;
+			break;
+		case 5:
+			changeOption(1);
+			loadMenu = 0;
+			break;
+		case 6:
+			if (current_option == 0)
+				loadMenu = 0;
+			else
+				loadMenu = 1;
+			function_map[options[current_option]]();
 		}
-
-	};
+	}
+	_Common::clearConsole();
 }
 
 void _Menu::printLogo()
@@ -150,14 +155,14 @@ void _Menu::fillMenuOptions()
 	}
 }
 
-bool _Menu::changeOption(bool direction) //0 for up, 1 for down
+void _Menu::changeOption(bool direction) //0 for up, 1 for down
 {
 	int top = 21;
 	if ((direction == 0 && (current_option == 4 || current_option == 0))
 		|| (direction == 1 && (current_option == 3 || current_option == 7)))
 	{
 		_Common::playSound(4);
-		return false;
+		return;
 	}
 	_Common::playSound(2);
 	if (current_option == -1)
@@ -186,7 +191,6 @@ bool _Menu::changeOption(bool direction) //0 for up, 1 for down
 	cout << options[current_option];
 	_Common::gotoXY(64, top + current_option % 4 * 2);
 	putchar(174);
-	return true;
 }
 
 void _Menu::mainMenu()
@@ -211,6 +215,7 @@ void _Menu::playMenu()
 void _Menu::playPvP()
 {
 	_Game g(0);
+	//g.setUpGame();
 	g.startGame();
 }
 
@@ -327,6 +332,7 @@ void _Menu::printRectangle(int left, int top, int width, int height)
 
 void _Menu::exitScreen()
 {
+	_Common::showCursor(false);
 	_Common::clearConsole();
 	printLogo();
 	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
@@ -334,22 +340,82 @@ void _Menu::exitScreen()
 	_Common::gotoXY(44, 20);
 	cout << "Do you want to exit?";
 	printRectangle(39, 23, 7, 2);
-	_Common::gotoXY(42, 24);
-	cout << "Yes";
 	printRectangle(62, 23, 6, 2);
-	_Common::gotoXY(65, 24);
-	cout << "No";
-	cin.get();
+	string str[2] = { "Yes", "No" };
+	int left[] = { 37,42,49,60,65,71 }, word[] = { 32,32,175,174 }, color[] = { 0,2 }, top = 24;
+	bool option = 0;
+	bool loop = 1;
+	auto print1 = [&]()
+	{
+		int i = 0;
+		while (i < 2)
+		{
+			_Common::playSound(2);
+			_Common::setConsoleColor(BRIGHT_WHITE, color[i]);
+			_Common::gotoXY(left[option * 3], top);        putchar(word[i * 2]);
+			_Common::gotoXY(left[option * 3 + 1], top);    cout << str[option];
+			_Common::gotoXY(left[option * 3 + 2], top);    putchar(word[i * 2 + 1]);
+			if(!i++)
+				option = !option;
+		}
+	};
+	print1();
+	while (loop)
+	{
+		int key = _Common::getConsoleInput();
+		if ((key == 3 && option == 1) || (key == 4 && option == 0))
+		{
+			print1();
+		}
+		else if (key == 6)
+		{
+			if (!option)
+				exitGame = 1;
+			loop = 0;
+		}
+		else
+		{
+			_Common::playSound(4);
+		}
+	}
 }
 
-void _Menu::playPvC1()
-{
-	_Game g(1);
-	g.startGame();
-}
-
+//void _Menu::playPvC1()
+//{
+//	_Game g;
+//	g.setUpGame(1);
+//	g.startGame();
+//}
+//
 void _Menu::playPvC2()
 {
 	_Game g(2);
 	g.startGame();
+}
+
+void _Menu::loadScreen() 
+{
+	_Common::clearConsole();
+	vector<string> fileName;
+	for (auto& p : filesystem::recursive_directory_iterator("load"))
+	{
+		if (p.path().extension() == ".txt")
+		{ 
+			string temp = p.path().filename().string();
+			temp.erase(temp.find_last_of('.'));
+			fileName.push_back(temp);
+		}
+	}
+	int option = 0;
+	changeFile(0, fileName, option);
+	cin.get();
+}
+
+void _Menu::changeFile(int key, vector<string>& fileName, int&option)
+{
+	for (int i = option; i < 8 && i < fileName.size(); i++)
+	{
+		_Common::gotoXY(54 - ceil((double)fileName[i].length() / 2),9 + i*2);
+		cout << fileName[i];
+	}
 }

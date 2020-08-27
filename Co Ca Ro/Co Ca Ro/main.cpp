@@ -1,18 +1,22 @@
-﻿#include <iostream>
-#include "_Common.h"
-//#include "_Game.h"
-#include "NhapNhay.cpp"
+﻿#include "_Common.h"
 #include "_Menu.h"
-//#include "NhapNhay.cpp"
-
-
+#include <iostream>
+#include <fstream>
+#include <string>
 using namespace std;
+void setConsoleWindow()
+{
+	_Common::setFontInfo();
+	_Common::movCenterAndRes();
+	_Common::disableMaximize();
+	_Common::setConsoleTitle();
+	_Common::hideScrollBars();
+	_Common::showCursor(false);
+	//disableMouseInput();
+}
 
 int main()
 {
-	_Common::setConsoleWindow();
+	setConsoleWindow();
 	_Menu::mainScreen();
-	//_Game g(SIZE, LEFT, TOP);
-	//g.startGame();
-	Sleep(100000000);
 }
