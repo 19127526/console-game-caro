@@ -1,10 +1,10 @@
 #pragma once
-#include "_Common.h"
-#include "_Game.h"
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <filesystem>
+#include "_Common.h"
+#include "_Game.h"
 using namespace std;
 
 class _Menu
@@ -21,14 +21,13 @@ public:
 	static void helpScreen();
 	static void exitScreen();
 	static void playPvP();
-	static void playPvC1() {};
+	static void playPvC1();
 	static void playPvC2();
 	static void printLogo();
-	static void goBack() { return; }
+	static void goBack() {}
 	static void printOptionsBoard();
-	static void fillMenuOptions();
 	static void printAnimation();
 	static void printRectangle(int, int, int, int);
-	static void changeOption(bool);
+	static void changeOption(bool, bool);
 	static void changeFile(int, vector<string>& fileName, int&);
 };

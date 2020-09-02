@@ -1,99 +1,131 @@
 #include "_Game.h"
-using namespace std;
-_Game::_Game(int mode)
+
+_Game::_Game()
 {
-	_mode = mode;
+	_mode = -1;
 	_x = LEFT, _y = TOP;
 	_b = new _Board(SIZE, LEFT, TOP);
-	_continue = _turn = _changeTurn = true;
+	_loop = _turn = _changeTurn = true;
+	_finish = false;
 	_showCursor = false;
 	_p1Name = _p2Name = "";
-	_countP1Win = _countP2Win = 0;
+	_countP1Wins = _countP2Wins = 0;
+	_loadSymbols = false;
 }
 
 _Game::~_Game()
 {
 	delete _b;
+	_b = nullptr;
 }
 
 void _Game::startGame()
 {
 	_Common::clearConsole();
-	_b->resetData();
-	_b->drawBoard();
-	//drawProfile();
-	_x = _b->getXAt(5, 6);
-	_y = _b->getYAt(5, 6);
-	_Common::gotoXY(_x, _y);
-	moveDown();
-	while (_continue)
+	while (_loop)
 	{
-		if(_mode == 0 || _turn == 1)
+		bool pause = false;
+		_finish = false;
+		printInterface();
+		_x = _b->getXAt(5, 6);
+		_y = _b->getYAt(5, 6);
+		_Common::gotoXY(_x, _y);
+		moveDown();
+		while (!_finish && !pause)
 		{
-			switch (_Common::getConsoleInput())
+			if (_mode == 0 || (_turn == 1 && _countRounds % 2 == 0) || (_turn == 0 && _countRounds%2==1))
 			{
-			case 0:
-				_Common::playSound(4);
-				break;
-			case 1:
-				_Menu::exitScreen();
-				return;
-			case 2:
-				moveUp();
-				break;
-			case 3:
-				moveLeft();
-				break;
-			case 4:
-				moveRight();
-				break;
-			case 5:
-				moveDown();
-				break;	
-			case 6:
+				switch (_Common::getConsoleInput())
+				{
+				case 0:
+					_Common::playSound(4);
+					break;
+				case 1:
+					saveData();
+					_Menu::exitScreen();
+					return;
+				case 2:
+					moveUp();
+					break;
+				case 3:
+					moveLeft();
+					break;
+				case 4:
+					moveRight();
+					break;
+				case 5:
+					moveDown();
+					break;
+				case 6:
+					processCheckBoard();
+					break;
+				case 7:
+					pause = 1;
+					_loadSymbols = 1;
+					_Menu::helpScreen();
+					_showCursor = false;
+					break;
+				}
+			}
+			else
+			{
+				_Point p = (_mode == 1) ? _b->PVC_easy() : _b->PVC_hard();
+				moveToDirection(p.getX(), p.getY());
 				processCheckBoard();
-				break;
 			}
 		}
-		else
+		if (pause)
+			continue;
+		_countRounds++;
+		askContinue();
+		if (_loop)
 		{
-			_Point p = (_mode == 1) ? _b->PVC_easy() : _b->PVC_hard();
-			moveToDirection(p.getX(), p.getY());
-			processCheckBoard();
+			swap(_p1Name, _p2Name);
+			swap(_countP1Wins, _countP2Wins);
 		}
 	}
+	saveData();
 }
 
-bool _Game::processCheckBoard()
+void _Game::processCheckBoard()
 {
 	int c = _b->checkBoard(_x, _y, _turn);
 	if (c == -1 || c == 1)
 	{
 		_Common::playSound(3);
 		_Common::gotoXY(_x, _y);
-		if (c == -1)
+		if (c == 1)
 		{
 			_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
 			putchar(88);
+			_Common::gotoXY(86, 8);
+			cout << _b->getCountX();
 		}
 		else
 		{
 			_Common::setConsoleColor(BRIGHT_WHITE, RED);
 			putchar(79);
+			_Common::gotoXY(86, 21);
+			cout << _b->getCountO();
 		}
 		int result = processFinish();
 		if (result == 2)
 		{
+			int color[] = { RED, BLUE }, pos[] = { 22,9 };
+			_Common::setConsoleColor(BRIGHT_WHITE, color[_turn]);
+			_Common::gotoXY(83, pos[_turn]);
+			cout << "IN TURN!";
+			_Common::gotoXY(83, pos[!_turn]);
+			cout << "        ";
+			_Common::gotoXY(_x, _y);
 			_showCursor = true;
 			_Common::showCursor(_showCursor);
 		}
-		return true;
 	}
 	else
 	{
 		if (_mode == 0)
 			_Common::playSound(5);
-		return false;
 	}
 }
 
@@ -104,28 +136,28 @@ int _Game::processFinish()
 	switch (pWhoWin)
 	{
 	case -1:
-		_continue = 0;
+		_finish = 1;
+		_countP2Wins++;
 		printWinPos();
-		P1WIN();
+		printP1Win();
 		break;
 	case 1:
-		_continue = 0;
+		_finish = 1;
+		_countP1Wins++;
 		printWinPos();
 		if (_mode == 1 || _mode == 2)
-			COMPUTERWIN();
+			printBotWin();
 		else
-			P2WIN();
-		
+			printP2Win();
 		break;
 	case 0:
-		_continue = 0;
-		DRAWWIN();
+		_finish = 1;
+		printDraw();
 		break;
 	case 2:
 		_turn = !_turn; // change turn if nothing happen
 		_changeTurn = 1;
 	}
-	_Common::gotoXY(_x, _y);
 	return pWhoWin;
 }
 
@@ -134,14 +166,14 @@ void _Game::moveRight()
 	if (_x < _b->getXAt(_b->getSize() - 1, _b->getSize() - 1))
 	{
 		_Common::playSound(_turn);
-		if (_b->isPlacedAtXY(_x, _y) == 0)
+		if (_b->getCheckAtXY(_x, _y) == 0)
 		{
 			_Common::gotoXY(_x, _y);
 			putchar(32);
 		}
 		_x += 4;
 		_Common::gotoXY(_x, _y);
-		printTurnChar();
+		printTurnSymbol();
 	}
 	else
 	{
@@ -154,14 +186,14 @@ void _Game::moveLeft()
 	if (_x > _b->getXAt(0, 0))
 	{
 		_Common::playSound(_turn);
-		if (_b->isPlacedAtXY(_x, _y) == 0)
+		if (_b->getCheckAtXY(_x, _y) == 0)
 		{
 			_Common::gotoXY(_x, _y);
 			putchar(32);
 		}
 		_x -= 4;
 		_Common::gotoXY(_x, _y);
-		printTurnChar();
+		printTurnSymbol();
 	}
 	else
 	{
@@ -174,14 +206,14 @@ void _Game::moveDown()
 	if (_y < _b->getYAt(_b->getSize() - 1, _b->getSize() - 1))
 	{
 		_Common::playSound(_turn);
-		if (_b->isPlacedAtXY(_x, _y) == 0)
+		if (_b->getCheckAtXY(_x, _y) == 0)
 		{
 			_Common::gotoXY(_x, _y);
 			putchar(32);
 		}
 		_y += 2;
 		_Common::gotoXY(_x, _y);
-		printTurnChar();
+		printTurnSymbol();
 	}
 	else
 	{
@@ -194,14 +226,14 @@ void _Game::moveUp()
 	if (_y > _b->getYAt(0, 0))
 	{
 		_Common::playSound(_turn);
-		if (_b->isPlacedAtXY(_x, _y) == 0)
+		if (_b->getCheckAtXY(_x, _y) == 0)
 		{
 			_Common::gotoXY(_x, _y);
 			putchar(32);
 		}
 		_y -= 2;
 		_Common::gotoXY(_x, _y);
-		printTurnChar();
+		printTurnSymbol();
 	}
 	else
 	{
@@ -209,9 +241,9 @@ void _Game::moveUp()
 	}
 }
 
-void _Game::printTurnChar()
+void _Game::printTurnSymbol()
 {
-	if (_b->isPlacedAtXY(_x,_y))
+	if (_b->getCheckAtXY(_x,_y))
 	{
 		if (_showCursor == false)
 		{
@@ -229,7 +261,9 @@ void _Game::printTurnChar()
 		if (_changeTurn == 1)
 		{
 			if (_turn == 1)
+			{
 				_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
+			}
 			else
 				_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
 			_changeTurn = 0;
@@ -240,24 +274,64 @@ void _Game::printTurnChar()
 			putchar(111);
 		_Common::gotoXY(_x, _y);
 	}
-}
+}         
 	
 
-void _Game::drawProfile()
+void _Game::printInterface()
 {
-	for (int i = 0; i < 25; i++)
+	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	_b->drawBoard();
+	if (_loadSymbols)
 	{
-		_Common::gotoXY(3, 3 + i);
-		for (int k = 0; k < 19; k++)
-		{
-			putchar(32);
-		}
-		_Common::gotoXY(87, 3 + i);
-		for (int k = 0; k < 19; k++)
-		{
-			putchar(32);
-		}
+		printLoadedSymbols();
+		_loadSymbols = 0;
 	}
+	_Menu::printRectangle(69, 1, 33, 10);
+	_Menu::printRectangle(69, 14, 33, 10);
+	_Common::gotoXY(82, 3);
+	cout << "Player 1:";
+	_Common::gotoXY(86 - _p1Name.length() / 2, 4);
+	cout << _p1Name;
+	_Common::gotoXY(79, 5);
+	cout << "Winning scores:";
+	string score1 = to_string(_countP1Wins) + "/" + to_string(_countRounds);
+	_Common::gotoXY(86 - score1.find('/'), 6);
+	cout << score1;
+	_Common::gotoXY(84,7);
+	cout << "Moves:";
+	_Common::gotoXY(86, 8);
+	cout << _b->getCountX();
+	if (_turn)
+	{
+		_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+		_Common::gotoXY(83, 9);
+		cout << "IN TURN!";
+	}
+	_Common::gotoXY(82, 16);
+	cout << "Player 2:";
+	_Common::gotoXY(86 - _p2Name.length() / 2, 17);
+	cout << _p2Name;
+	_Common::gotoXY(79, 18);
+	cout << "Winning scores:";
+	string score2 = to_string(_countP2Wins) + "/" + to_string(_countRounds);
+	_Common::gotoXY(86 - score2.find('/'), 19);
+	cout << score2;
+	_Common::gotoXY(84, 20);
+	cout << "Moves:";
+	_Common::gotoXY(86, 21);
+	cout << _b->getCountO();
+	if (!_turn)
+	{
+		_Common::setConsoleColor(BRIGHT_WHITE, RED);
+		_Common::gotoXY(83, 22);
+		cout << "IN TURN!";
+	}
+	_Menu::printRectangle(69, 27, 14, 2);
+	_Common::gotoXY(73, 28);
+	cout << "H : Help";
+	_Menu::printRectangle(88, 27, 14, 2);
+	_Common::gotoXY(91, 28);
+	cout << "Esc : Exit";
 }
 
 void _Game::moveToDirection(int x, int y)
@@ -284,41 +358,41 @@ void _Game::moveToDirection(int x, int y)
 	}
 }
 
-void _Game::setUpGame(string fileName)
+void _Game::setUpGame(int mode, string fileName)
 {
-	bool open = 1;
-	if (fileName != "")
+	if (mode == 3)
 	{
 		string fullPath = "load\\" + fileName + ".txt";
 		ifstream inFile(fullPath);
-		getline(inFile,_p1Name);
-		cout << _p1Name << endl;
+		getline(inFile, _p1Name);
 		getline(inFile, _p2Name);
-		cout << _p2Name << endl;
-		inFile >> _countP1Win;
-		inFile >> _countP2Win;
-		inFile >> _continue;
-		if (_continue)
+		inFile >> _mode;
+		inFile >> _countRounds;
+		inFile >> _countP1Wins;
+		inFile >> _countP2Wins;
+		inFile >> _finish;
+		if (!_finish)
 		{
-			_b->loadData(inFile);
+			_loadSymbols = true;
+			_b->loadBoard(inFile);
 		}
+		inFile.close();
 	}
 	else
 	{
 		_Common::clearConsole();
 		_Menu::printLogo();
-		_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
+		_mode = mode;
+		_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
 		_Common::gotoXY(35, 18);
-		cout << "Enter player 1 name:  ";
+		cout << "Enter player 1's name:  ";
 		_Common::showCursor(true);
 		getline(cin, _p1Name);
-		_Common::showCursor(false);
-		if (_mode == 1)
+		if (_mode == 0)
 		{
-			_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
+			_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
 			_Common::gotoXY(35, 21);
-			cout << "Enter player 2 name:  ";
-			_Common::showCursor(true);
+			cout << "Enter player 2's name:  ";
 			getline(cin, _p2Name);
 			_Common::showCursor(false);
 		}
@@ -326,254 +400,89 @@ void _Game::setUpGame(string fileName)
 		{
 			_p2Name = "Computer";
 		}
+		_Common::showCursor(false);
+		_b->resetData();
 	}
-	cin.get();
 }
 
 void _Game::printWinPos()
 {
 	_Point* win = _b->getWinPos();
-	unsigned int arr[] = { 'D','M','M','T','Q' };
+	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	char arr[] = { 'D','M','M','T','Q' };
+	int symbol = (_turn) ? 88 : 79;  //hieu ung cho nay
 	for (int i = 0; i < 5; i++)
 	{
 		_Common::gotoXY(win[i].getX(), win[i].getY());
 		putchar(arr[i]);
 	}
 	delete[] win;
-	Sleep(10000);
+	Sleep(3000);
 }
 
-void Box()
+void _Game::saveData()
 {
-	int j = 4;
-	_Common::setConsoleColor(BRIGHT_WHITE, rand() % 10 + 1);
-	_Common::gotoXY(46, j + 18);
-	cout << "Y   : Play Again!";
-	_Common::gotoXY(46, j + 19);
-	cout << "ESC : BACK";
-}
-
-void _Game::P1()
-{
-	_Common::setConsoleColor(BRIGHT_WHITE, 0);
-	_Common::clearConsole();
-	unsigned char P1[] = {
-		219, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 176, 176, 176, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 219, 219, 187, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 187, 176, 32, 32, 32, 176, 176, 219, 219, 219, 187, 176, 176,
-		219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 201, 205, 205, 219, 219, 187, 200, 219, 219, 187, 176, 219, 219, 201, 188, 219, 219, 201, 205, 205, 205, 205, 188, 219, 219, 201, 205, 205, 219, 219, 187, 32, 32, 32, 176, 219, 219, 219, 219, 186, 176, 176,
-		219, 219, 219, 219, 219, 219, 201, 188, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 186, 176, 200, 219, 219, 219, 219, 201, 188, 176, 219, 219, 219, 219, 219, 187, 176, 176, 219, 219, 219, 219, 219, 219, 201, 188, 32, 32, 32, 219, 219, 201, 219, 219, 186, 176, 176,
-		219, 219, 201, 205, 205, 205, 188, 176, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 201, 205, 205, 219, 219, 186, 176, 176, 200, 219, 219, 201, 188, 176, 176, 219, 219, 201, 205, 205, 188, 176, 176, 219, 219, 201, 205, 205, 219, 219, 187, 32, 32, 32, 200, 205, 188, 219, 219, 186, 176, 176,
-		219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 186, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 186, 176, 176, 219, 219, 186, 32, 32, 32, 219, 219, 219, 219, 219, 219, 219, 187,
-		200, 205, 188, 176, 176, 176, 176, 176, 200, 205, 205, 205, 205, 205, 205, 188, 200, 205, 188, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 205, 205, 205, 205, 205, 188, 200, 205, 188, 176, 176, 200, 205, 188, 32, 32, 32, 200, 205, 205, 205, 205, 205, 205, 188,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 219, 219, 187, 176, 176, 176, 176, 176, 176, 176, 219, 219, 187, 219, 219, 187, 219, 219, 219, 187, 176, 176, 219, 219, 187, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 219, 219, 186, 176, 176, 219, 219, 187, 176, 176, 219, 219, 186, 219, 219, 186, 219, 219, 219, 219, 187, 176, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 200, 219, 219, 187, 219, 219, 219, 219, 187, 219, 219, 201, 188, 219, 219, 186, 219, 219, 201, 219, 219, 187, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 176, 219, 219, 219, 219, 201, 205, 219, 219, 219, 219, 186, 176, 219, 219, 186, 219, 219, 186, 200, 219, 219, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 176, 200, 219, 219, 201, 188, 176, 200, 219, 219, 201, 188, 176, 219, 219, 186, 219, 219, 186, 176, 200, 219, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 188, 176, 176, 200, 205, 188, 200, 205, 188, 176, 176, 200, 205, 205, 188, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-	};
-	int top = 8;
-	int num_line = 13;
-	int num_char = 60;
-	for (int i = 0; i < 7; i++)
+	string path;
+	if (_countRounds % 2 == 1 && (!_finish || _loop))
 	{
-		_Common::setConsoleColor(BRIGHT_WHITE, i);
-		_Common::gotoXY(24, i + top);
-		Sleep(90);
-		for (int j = 0; j < num_char; j++)
+		path = "load\\" + _p2Name + "-" + _p1Name + ".txt";
+	}
+	else
+	{
+		path = "load\\" + _p1Name + "-" + _p2Name + ".txt";
+	}
+	ofstream outFile(path);
+	outFile << _p1Name << endl;
+	outFile << _p2Name << endl;
+	outFile << _mode << endl;
+	outFile << _countRounds << endl;
+	outFile << _countP1Wins << endl;
+	outFile << _countP2Wins << endl;
+	outFile << _finish << endl;
+	if (!_finish)
+	{
+		_b->saveBoard(outFile);
+	}
+	outFile.close();
+}
+
+void _Game::printLoadedSymbols()
+{
+	for (int i = 0; i < _b->getSize(); i++)
+	{
+		for (int j = 0; j < _b->getSize(); j++)
 		{
-			putchar(P1[i * num_char + j]);
+			_x = _b->getXAt(i, j);
+			_y = _b->getYAt(i, j);
+			_Common::gotoXY(_x, _y);
+			int c = _b->getCheckAtXY(_x, _y);
+			if (c == 1)
+			{
+				_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+				putchar(88);
+			}
+			else if(c == -1)
+			{
+				_Common::setConsoleColor(BRIGHT_WHITE, RED);
+				putchar(79);
+			}
 		}
 	}
-	for (int i = 7; i < 13; i++)
+	if (_b->getCountX() > _b->getCountO())
 	{
-		_Common::setConsoleColor(BRIGHT_WHITE, i - 7);
-		_Common::gotoXY(24, i + top);
-		Sleep(90);
-		for (int j = 0; j < num_char; j++)
-		{
-
-			putchar(P1[i * num_char + j]);
-		}
+		_Common::setConsoleColor(BRIGHT_WHITE, RED);
+		_turn = 0;
+	}
+	else
+	{
+		_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+		_turn = 1;
 	}
 }
 
-void _Game::P1WIN()
+void _Game::askContinue()
 {
-	int count = 0;
-	P1();
-	while (count < 30)
-	{
-		Box();
-		Sleep(100);
-		count++;
-	}
-}
-
-void _Game::P2()
-{
-	_Common::setConsoleColor(BRIGHT_WHITE, 0);
-	_Common::clearConsole();
-	unsigned char P2[] = {
-		219, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 176, 176, 176, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 219, 219, 187, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 187, 176, 32, 32, 219, 219, 219, 219, 219, 219, 187, 176,
-		219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 201, 205, 205, 219, 219, 187, 200, 219, 219, 187, 176, 219, 219, 201, 188, 219, 219, 201, 205, 205, 205, 205, 188, 219, 219, 201, 205, 205, 219, 219, 187, 32, 32, 200, 205, 205, 205, 205, 219, 219, 187,
-		219, 219, 219, 219, 219, 219, 201, 188, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 186, 176, 200, 219, 219, 219, 219, 201, 188, 176, 219, 219, 219, 219, 219, 187, 176, 176, 219, 219, 219, 219, 219, 219, 201, 188, 32, 32, 176, 176, 219, 219, 219, 201, 205, 188,
-		219, 219, 201, 205, 205, 205, 188, 176, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 201, 205, 205, 219, 219, 186, 176, 176, 200, 219, 219, 201, 188, 176, 176, 219, 219, 201, 205, 205, 188, 176, 176, 219, 219, 201, 205, 205, 219, 219, 187, 32, 32, 219, 219, 201, 205, 205, 188, 176, 176,
-		219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 186, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 186, 176, 176, 219, 219, 186, 32, 32, 219, 219, 219, 219, 219, 219, 219, 187,
-		200, 205, 188, 176, 176, 176, 176, 176, 200, 205, 205, 205, 205, 205, 205, 188, 200, 205, 188, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 205, 205, 205, 205, 205, 188, 200, 205, 188, 176, 176, 200, 205, 188, 32, 32, 200, 205, 205, 205, 205, 205, 205, 188,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 219, 219, 187, 176, 176, 176, 176, 176, 176, 176, 219, 219, 187, 219, 219, 187, 219, 219, 219, 187, 176, 176, 219, 219, 187, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 219, 219, 186, 176, 176, 219, 219, 187, 176, 176, 219, 219, 186, 219, 219, 186, 219, 219, 219, 219, 187, 176, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 200, 219, 219, 187, 219, 219, 219, 219, 187, 219, 219, 201, 188, 219, 219, 186, 219, 219, 201, 219, 219, 187, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 176, 219, 219, 219, 219, 201, 205, 219, 219, 219, 219, 186, 176, 219, 219, 186, 219, 219, 186, 200, 219, 219, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 176, 200, 219, 219, 201, 188, 176, 200, 219, 219, 201, 188, 176, 219, 219, 186, 219, 219, 186, 176, 200, 219, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 188, 176, 176, 200, 205, 188, 200, 205, 188, 176, 176, 200, 205, 205, 188, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-	};
-	int top = 8;
-	int num_line = 13;
-	int num_char = 59;
-	for (int i = 0; i < 7; i++)
-	{
-		_Common::setConsoleColor(BRIGHT_WHITE, i);
-		Sleep(90);
-		_Common::gotoXY(24, i + top);
-		for (int j = 0; j < num_char; j++)
-		{
-			putchar(P2[i * num_char + j]);
-		}
-	}
-	for (int i = 7; i < num_line; i++)
-	{
-		_Common::setConsoleColor(BRIGHT_WHITE, i - 7);
-		Sleep(90);
-		_Common::gotoXY(24, i + top);
-		for (int j = 0; j < num_char; j++)
-		{
-			putchar(P2[i * num_char + j]);
-		}
-	}
-}
-
-void _Game::P2WIN()
-{
-	int count = 0;
-	P2();
-	while (count < 30)
-	{
-		Box();
-		Sleep(100);
-		count++;
-	}
-}
-
-void _Game::DRAW()
-{
-	_Common::setConsoleColor(BRIGHT_WHITE, 0);
-	_Common::clearConsole();
-	unsigned char DRAW[] = {
-		219, 219, 219, 219, 219, 219, 187, 176, 32, 32, 219, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 176, 176, 176, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 219, 219, 187, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 187, 176,
-		200, 205, 205, 205, 205, 219, 219, 187, 32, 32, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 201, 205, 205, 219, 219, 187, 200, 219, 219, 187, 176, 219, 219, 201, 188, 219, 219, 201, 205, 205, 205, 205, 188, 219, 219, 201, 205, 205, 219, 219, 187,
-		176, 176, 219, 219, 219, 201, 205, 188, 32, 32, 219, 219, 219, 219, 219, 219, 201, 188, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 186, 176, 200, 219, 219, 219, 219, 201, 188, 176, 219, 219, 219, 219, 219, 187, 176, 176, 219, 219, 219, 219, 219, 219, 201, 188,
-		219, 219, 201, 205, 205, 188, 176, 176, 32, 32, 219, 219, 201, 205, 205, 205, 188, 176, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 201, 205, 205, 219, 219, 186, 176, 176, 200, 219, 219, 201, 188, 176, 176, 219, 219, 201, 205, 205, 188, 176, 176, 219, 219, 201, 205, 205, 219, 219, 187,
-		219, 219, 219, 219, 219, 219, 219, 187, 32, 32, 219, 219, 186, 176, 176, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 186, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 186, 176, 176, 219, 219, 186,
-		200, 205, 205, 205, 205, 205, 205, 188, 32, 32, 200, 205, 188, 176, 176, 176, 176, 176, 200, 205, 205, 205, 205, 205, 205, 188, 200, 205, 188, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 205, 205, 205, 205, 205, 188, 200, 205, 188, 176, 176, 200, 205, 188,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 219, 219, 219, 219, 219, 219, 187, 176, 219, 219, 219, 219, 219, 219, 187, 176, 176, 219, 219, 219, 219, 219, 187, 176, 176, 219, 219, 187, 176, 176, 176, 176, 176, 176, 176, 219, 219, 187, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 201, 205, 205, 219, 219, 187, 176, 219, 219, 186, 176, 176, 219, 219, 187, 176, 176, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 219, 219, 186, 176, 176, 219, 219, 186, 219, 219, 219, 219, 219, 219, 201, 188, 219, 219, 219, 219, 219, 219, 219, 186, 176, 200, 219, 219, 187, 219, 219, 219, 219, 187, 219, 219, 201, 188, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 219, 219, 186, 176, 176, 219, 219, 186, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 201, 205, 205, 219, 219, 186, 176, 176, 219, 219, 219, 219, 201, 205, 219, 219, 219, 219, 186, 176, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 219, 219, 219, 219, 219, 219, 201, 188, 219, 219, 186, 176, 176, 219, 219, 186, 219, 219, 186, 176, 176, 219, 219, 186, 176, 176, 200, 219, 219, 201, 188, 176, 200, 219, 219, 201, 188, 176, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 200, 205, 205, 205, 205, 205, 188, 176, 200, 205, 188, 176, 176, 200, 205, 188, 200, 205, 188, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 188, 176, 176, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32
-	};
-	int top = 8;
-	int num_line = 13;
-	int num_char = 59;
-	for (int i = 0; i < 7; i++)
-	{
-		_Common::setConsoleColor(BRIGHT_WHITE, i);
-		Sleep(90);
-		_Common::gotoXY(24, i + top);
-		for (int j = 0; j < num_char; j++)
-		{
-			putchar(DRAW[i * num_char + j]);
-		}
-	}
-	for (int i = 7; i < num_line; i++)
-	{
-		_Common::setConsoleColor(BRIGHT_WHITE, i - 7);
-		Sleep(90);
-		_Common::gotoXY(24, i + top);
-		for (int j = 0; j < num_char; j++)
-		{
-			putchar(DRAW[i * num_char + j]);
-		}
-	}
-}
-
-void _Game::DRAWWIN()
-{
-	int count = 0;
-	DRAW();
-	while (count < 30)
-	{
-		Box();
-		Sleep(100);
-		count++;
-	}
-}
-
-void _Game::COMPUTER()
-{
-	_Common::setConsoleColor(BRIGHT_WHITE, 0);
-	_Common::clearConsole();
-	unsigned char COMPUTER[] = {
-		176, 219, 219, 219, 219, 219, 187, 176, 176, 219, 219, 219, 219, 219, 187, 176, 219, 219, 219, 187, 176, 176, 176, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 187, 176, 219, 219, 187, 176, 176, 176, 219, 219, 187, 219, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 219, 219, 219, 219, 187, 176,
-		219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 219, 219, 187, 176, 219, 219, 219, 219, 186, 219, 219, 201, 205, 205, 219, 219, 187, 219, 219, 186, 176, 176, 176, 219, 219, 186, 200, 205, 205, 219, 219, 201, 205, 205, 188, 219, 219, 201, 205, 205, 205, 205, 188, 219, 219, 201, 205, 205, 219, 219, 187,
-		219, 219, 186, 176, 176, 200, 205, 188, 219, 219, 186, 176, 176, 219, 219, 186, 219, 219, 201, 219, 219, 219, 219, 201, 219, 219, 186, 219, 219, 219, 219, 219, 219, 201, 188, 219, 219, 186, 176, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 219, 219, 219, 187, 176, 176, 219, 219, 219, 219, 219, 219, 201, 188,
-		219, 219, 186, 176, 176, 219, 219, 187, 219, 219, 186, 176, 176, 219, 219, 186, 219, 219, 186, 200, 219, 219, 201, 188, 219, 219, 186, 219, 219, 201, 205, 205, 205, 188, 176, 219, 219, 186, 176, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 201, 205, 205, 188, 176, 176, 219, 219, 201, 205, 205, 219, 219, 187,
-		200, 219, 219, 219, 219, 219, 201, 188, 200, 219, 219, 219, 219, 219, 201, 188, 219, 219, 186, 176, 200, 205, 188, 176, 219, 219, 186, 219, 219, 186, 176, 176, 176, 176, 176, 200, 219, 219, 219, 219, 219, 219, 201, 188, 176, 176, 176, 219, 219, 186, 176, 176, 176, 219, 219, 219, 219, 219, 219, 219, 187, 219, 219, 186, 176, 176, 219, 219, 186,
-		176, 200, 205, 205, 205, 205, 188, 176, 176, 200, 205, 205, 205, 205, 188, 176, 200, 205, 188, 176, 176, 176, 176, 176, 200, 205, 188, 200, 205, 188, 176, 176, 176, 176, 176, 176, 200, 205, 205, 205, 205, 205, 188, 176, 176, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 205, 205, 205, 205, 205, 188, 200, 205, 188, 176, 176, 200, 205, 188,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 219, 219, 187, 176, 176, 176, 176, 176, 176, 176, 219, 219, 187, 219, 219, 187, 219, 219, 219, 187, 176, 176, 219, 219, 187, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 219, 219, 186, 176, 176, 219, 219, 187, 176, 176, 219, 219, 186, 219, 219, 186, 219, 219, 219, 219, 187, 176, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 200, 219, 219, 187, 219, 219, 219, 219, 187, 219, 219, 201, 188, 219, 219, 186, 219, 219, 201, 219, 219, 187, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 176, 219, 219, 219, 219, 201, 205, 219, 219, 219, 219, 186, 176, 219, 219, 186, 219, 219, 186, 200, 219, 219, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 176, 200, 219, 219, 201, 188, 176, 200, 219, 219, 201, 188, 176, 219, 219, 186, 219, 219, 186, 176, 200, 219, 219, 219, 186, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 176, 176, 176, 200, 205, 188, 176, 176, 176, 200, 205, 188, 176, 176, 200, 205, 188, 200, 205, 188, 176, 176, 200, 205, 205, 188, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32
-	};
-	int top = 8;
-	int num_line = 13;
-	int num_char = 69;
-	for (int i = 0; i < 7; i++)
-	{
-		_Common::setConsoleColor(BRIGHT_WHITE, i);
-		Sleep(90);
-		_Common::gotoXY(20, i + top);
-		for (int j = 0; j < num_char; j++)
-		{
-			putchar(COMPUTER[i * num_char + j]);
-		}
-	}
-	for (int i = 7; i < num_line; i++)
-	{
-		_Common::setConsoleColor(BRIGHT_WHITE, i - 7);
-		Sleep(90);
-		_Common::gotoXY(20, i + top);
-		for (int j = 0; j < num_char; j++)
-		{
-			putchar(COMPUTER[i * num_char + j]);
-		}
-	}
-}
-
-void _Game::COMPUTERWIN()
-{
-	int count = 0;
-	COMPUTER();
-	while (count < 30)
-	{
-		Box();
-		Sleep(100);
-		count++;
-	}
+	_b->resetData();
+	_loop = 1;
+	_changeTurn = 1;
 }

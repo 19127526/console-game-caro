@@ -8,44 +8,47 @@
 #include "_Point.h"
 
 #define SIZE 14
-#define LEFT 25
+#define LEFT 4
 #define TOP 1
+
 using namespace std;
 class _Game
 {
 private:
-	_Board* _b;// a board game
-	string _p1Name;
-	string _p2Name;
-	int _countP1Win;
-	int _countP2Win;
-	bool _continue;
-	bool _turn;// turn: true for the 1
-	int _x, _y; // current position of cursor
-	bool _changeTurn;
-	bool _showCursor;
-	int _mode; //0 for PvP, 1 for PvC(easy), 2 for PvC(hard)
+	_Board* _b;       //Bang co caro
+	string _p1Name;   //Ten nguoi choi 1
+	string _p2Name;   //Ten nguoi choi 2
+	int _countP1Wins; //So lan nguoi choi 1 thang
+	int _countP2Wins; //So lan nguoi choi 2 thang
+	int _countRounds; //So van dau
+	bool _finish;     //1: van co chua ket thuc, 0: van co da ket thuc 
+	bool _turn;       //1: luot nguoi choi 1, 0: luot nguoi choi 2
+	int _x, _y;       //vi tri x, y  tren man hinh
+	bool _changeTurn; //gan co de thay doi mau sac khi thay doi luot
+	bool _loop;       //1: nguoi choi choi tiep, 0: dung lai
+	bool _showCursor; //gan co de phan biet vi tri da co x,o
+	int _mode;        //0: che do nguoi-nguoi, 1:nguoi-may(de), 2: nguoi-may(kho)
+	bool _loadSymbols;//1: load lai cac ki hieu x,o neu van game chua ket thuc
 public:
-	_Game(int);
+	_Game();
 	~_Game();
-	void startGame(); // Function to start the game
-	int processFinish();
-	bool processCheckBoard();
+	void startGame();    //bat dau tro choi
+	int processFinish(); //xu li
+	void processCheckBoard();
 	void moveRight();
 	void moveLeft();
 	void moveUp();
 	void moveDown();
-	void printTurnChar();
-	void drawProfile();
-	void setUpGame(string = "");
+	void printTurnSymbol();
+	void printInterface();
+	void setUpGame(int, string = "");
+	void saveData();
 	void moveToDirection(int, int);
 	void printWinPos();
-	void P1(); // Print WIN P1
-	void P2(); // Print WIN P2
-	void DRAW(); // Print WIN DRAW
-	void COMPUTER(); // Print WIN COMPUTER
-	void P1WIN();
-	void P2WIN();
-	void DRAWWIN();
-	void COMPUTERWIN();
+	void printLoadedSymbols();
+	void askContinue();
+	void printP1Win()  {}
+	void printP2Win() {}
+	void printBotWin() {}
+	void printDraw() {}
 };

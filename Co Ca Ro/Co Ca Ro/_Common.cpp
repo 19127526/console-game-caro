@@ -3,14 +3,6 @@
 HWND _Common::consoleWindow = GetConsoleWindow();
 HANDLE _Common::consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
-//_Common::_Common()
-//{
-//}
-
-//_Common::~_Common()
-//{
-//}
-
 void _Common::gotoXY(int pX, int pY)
 {
 	SetConsoleCursorPosition(consoleOutput, COORD{ (short)pX, (short)pY });
@@ -111,6 +103,8 @@ int _Common::getConsoleInput()
 			return 5;
 		else if (c == 13)             //Enter
 			return 6;
+		else if (c == 72 || c == 104) //H, h
+			return 7;
 		else
 			return 0;
 	}

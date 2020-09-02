@@ -30,8 +30,8 @@ private:
 	static HWND consoleWindow;
 	static HANDLE consoleOutput;
 public:
-	//_Common();
-	//~_Common();
+	_Common() {}
+	~_Common() {}
 	static void gotoXY(int, int);
 	static void movCenterAndRes();
 	static void setConsoleColor(int, int);
@@ -43,5 +43,5 @@ public:
 	static void clearConsole();
 	static void disableMouseInput();
 	static int getConsoleInput();
-	static void playSound(int = 0);
+	static void playSound(int);
 };

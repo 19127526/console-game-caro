@@ -1,5 +1,4 @@
 #include "_Menu.h"
-bool _Menu::exitGame = 0;
 int _Menu::current_option;
 const string _Menu::options[8] = { "Play", "Load", "Help", "Exit", " PvP ", "PvC(easy)", "PvC(hard)", "Back" };
 
@@ -14,24 +13,19 @@ void _Menu::mainScreen()
 		{options[5], playPvC1},
 		{options[6], playPvC2},
 		{options[7], goBack} };
-	//function_map[options[4]]();
 	bool loadMenu = 1;
-	while (!exitGame)
+	while (true)
 	{
 		if(loadMenu)
 			mainMenu();
 		switch(_Common::getConsoleInput())
 		{
-		case 0:
-			_Common::playSound(4); //wrong key sound
-			loadMenu = 0;
-			break;
 		case 2:
-			changeOption(0);
+			changeOption(0,1);
 			loadMenu = 0;
 			break;
 		case 5:
-			changeOption(1);
+			changeOption(1,1);
 			loadMenu = 0;
 			break;
 		case 6:
@@ -40,6 +34,10 @@ void _Menu::mainScreen()
 			else
 				loadMenu = 1;
 			function_map[options[current_option]]();
+			break;
+		default:
+			_Common::playSound(4); //wrong key sound
+			loadMenu = 0;
 		}
 	}
 	_Common::clearConsole();
@@ -142,20 +140,7 @@ void _Menu::printAnimation()
 	}
 }
 
-void _Menu::fillMenuOptions()
-{
-	int top = 21;
-	int offset = (current_option < 4) ? 0 : 4;
-
-	_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
-	for (int i = 0; i < 4; i++)
-	{
-		_Common::gotoXY(54 - (int)options[i+offset].length()/2 , top + i * 2);
-		cout << options[i+offset];
-	}
-}
-
-void _Menu::changeOption(bool direction) //0 for up, 1 for down
+void _Menu::changeOption(bool direction, bool flag) //0 for up, 1 for down
 {
 	int top = 21;
 	if ((direction == 0 && (current_option == 4 || current_option == 0))
@@ -164,33 +149,28 @@ void _Menu::changeOption(bool direction) //0 for up, 1 for down
 		_Common::playSound(4);
 		return;
 	}
-	_Common::playSound(2);
-	if (current_option == -1)
+	_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+	_Common::gotoXY(54 - (int)options[current_option].length() / 2, top + current_option % 4 * 2);
+	cout << options[current_option];
+	if (flag)
 	{
-		current_option = 0;
-	}
-	else if(current_option == 8)
-	{
-		current_option = 4;
-	}
-	else
-	{
-		_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
 		_Common::gotoXY(44, top + current_option % 4 * 2);
 		putchar(32);
+		_Common::gotoXY(64, top + current_option % 4 * 2);
+		putchar(32);
+	}
+	(direction == 1) ? current_option++ : current_option--;
+	if(flag)
+	{
+		_Common::playSound(2);
+		_Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+		_Common::gotoXY(44, top + current_option % 4 * 2);
+		putchar(175);
 		_Common::gotoXY(54 - (int)options[current_option].length() / 2, top + current_option % 4 * 2);
 		cout << options[current_option];
 		_Common::gotoXY(64, top + current_option % 4 * 2);
-		putchar(32);
-		(direction == 1) ? current_option++ : current_option--;
+		putchar(174);
 	}
-	_Common::setConsoleColor(BRIGHT_WHITE, GREEN);
-	_Common::gotoXY(44, top + current_option % 4 * 2);
-	putchar(175);
-	_Common::gotoXY(54 - (int)options[current_option].length() / 2, top + current_option % 4 * 2);
-	cout << options[current_option];
-	_Common::gotoXY(64, top + current_option % 4 * 2);
-	putchar(174);
 }
 
 void _Menu::mainMenu()
@@ -200,27 +180,30 @@ void _Menu::mainMenu()
 	printLogo();
 	//printAnimation();
 	printOptionsBoard();
-	current_option = -1;
-	fillMenuOptions();
-	changeOption(1);
+	current_option = 3;
+	changeOption(0, 0);
+	changeOption(0, 0);
+	changeOption(0, 1);
 }
 
 void _Menu::playMenu()
 {
-	current_option = 8;
-	fillMenuOptions();
-	changeOption(1);
+	current_option = 7;
+	changeOption(0, 0);
+	changeOption(0, 0);
+	changeOption(0, 1);
 }
 
 void _Menu::playPvP()
 {
-	_Game g(0);
-	//g.setUpGame();
+	_Game g;
+	g.setUpGame(0);
 	g.startGame();
 }
 
 void _Menu::helpScreen()
 {
+	_Common::showCursor(false);
 	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	_Common::clearConsole();
 	int left = 13, top = 2, width = 81, height = 23;
@@ -370,8 +353,10 @@ void _Menu::exitScreen()
 		else if (key == 6)
 		{
 			if (!option)
-				exitGame = 1;
-			loop = 0;
+			{
+				exit(0);
+			}
+			return;
 		}
 		else
 		{
@@ -380,16 +365,17 @@ void _Menu::exitScreen()
 	}
 }
 
-//void _Menu::playPvC1()
-//{
-//	_Game g;
-//	g.setUpGame(1);
-//	g.startGame();
-//}
-//
+void _Menu::playPvC1()
+{
+	_Game g;
+	g.setUpGame(1);
+	g.startGame();
+}
+
 void _Menu::playPvC2()
 {
-	_Game g(2);
+	_Game g;
+	g.setUpGame(2);
 	g.startGame();
 }
 
@@ -406,16 +392,92 @@ void _Menu::loadScreen()
 			fileName.push_back(temp);
 		}
 	}
-	int option = 0;
-	changeFile(0, fileName, option);
-	cin.get();
+	if (!fileName.size())
+	{
+		_Common::gotoXY(42, 15);
+		cout << "No game files were found!";
+		Sleep(3000);
+		return;
+	}
+	int option = 8;
+	changeFile(3, fileName, option);
+	bool chosen = 0;
+	while (!chosen)
+	{
+		int key = _Common::getConsoleInput();
+		if (key == 6)
+		{
+			_Game g;
+			g.setUpGame(3, fileName[option]);
+			g.startGame();
+			chosen = 1;
+		}
+		else if (key > 1 && key < 6)
+		{
+			changeFile(key, fileName, option);
+		}
+		else if (key == 1)
+		{
+			chosen = 1;
+		}
+		else
+		{
+			_Common::playSound(4);
+		}
+	}
 }
 
-void _Menu::changeFile(int key, vector<string>& fileName, int&option)
+void _Menu::changeFile(int key, vector<string>& fileName, int& option)
 {
-	for (int i = option; i < 8 && i < fileName.size(); i++)
+	if (key == 3)
 	{
-		_Common::gotoXY(54 - ceil((double)fileName[i].length() / 2),9 + i*2);
-		cout << fileName[i];
+		if (option > 7)
+		{
+			//option, tu tinh
+			//Di chuyen qua page ben trai va load lai cac ten file o page
+		}
+		else
+		{
+			//option, tu tinh
+			_Common::playSound(4);
+		}
+		return;
+	}
+	if (key == 4)
+	{
+		if (option < fileName.size()/8)
+		{
+			//Di chuyen qua page ben phai va load lai cac ten file o page
+		}
+		else
+		{
+			_Common::playSound(4);
+		}
+		return;
+	}
+	if (key == 2)
+	{
+		if (option % 8 != 0)
+		{
+			option--;
+			//Di chuyen len
+		}
+		else
+		{
+			_Common::playSound(4);
+		}
+		return;
+	}
+	if (key == 2)
+	{
+		if (option % 8 < 8 && option < fileName.size() - 1)
+		{
+			option++;
+			//Di chuyen xuong
+		}
+		else
+		{
+			_Common::playSound(4);
+		}
 	}
 }
