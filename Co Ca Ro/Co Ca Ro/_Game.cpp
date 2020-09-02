@@ -482,7 +482,50 @@ void _Game::printLoadedSymbols()
 
 void _Game::askContinue()
 {
-	_b->resetData();
-	_loop = 1;
-	_changeTurn = 1;
+	_Common::gotoXY(38, 21);
+	cout << "Do you want to play another round?";
+	string str[2] = { "Yes", "No" };
+	int left[] = { 38,42,48,61,65,70 }, word[] = { 32,32,175,174 }, color[] = { BLACK, GREEN }, top = 24;
+	bool choice = 1;
+	auto print1 = [&]()
+	{
+		int i = 0;
+		while (i < 2)
+		{
+			_Common::playSound(2);
+			_Common::setConsoleColor(BRIGHT_WHITE, color[i]);
+			_Common::gotoXY(left[choice * 3], top);        putchar(word[i * 2]);
+			_Common::gotoXY(left[choice * 3 + 1], top);    cout << str[choice];
+			_Common::gotoXY(left[choice * 3 + 2], top);    putchar(word[i * 2 + 1]);
+			if (!i++)
+				choice = !choice;
+		}
+	};
+	print1();
+	while (true)
+	{
+		int key = _Common::getConsoleInput();
+		if ((key == 3 && choice == 1) || (key == 4 && choice == 0))
+		{
+			print1();
+		}
+		else if (key == 6)
+		{
+			if (!choice)
+			{
+				_b->resetData();
+				_loop = 1;
+				_changeTurn = 1;
+			}
+			else
+			{
+				_loop = 0;
+			}
+			return;
+		}
+		else
+		{
+			_Common::playSound(4);
+		}
+	}
 }

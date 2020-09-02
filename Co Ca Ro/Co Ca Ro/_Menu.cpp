@@ -113,24 +113,25 @@ void _Menu::printAnimation()
 		           40,18,54,18,68,18,82,18,96,18,5,24,19,24,33,24,75,24,89,
 		           24,103,24,12,30,26,30,40,30,54,30,68,30,82,30,96,30 };
 	int n = (sizeof(pos) / sizeof(pos[0]))/2;
-	int a = 79, b = 88;
-	int c = LIGHT_BLUE, d = LIGHT_RED;
+	bool turn = 0;
+	int color[] = { LIGHT_RED, LIGHT_BLUE };
+	int symbol[] = { 79,88 };
 	int loop = 5;
 	while (loop--)
 	{
 		for (int i = 0; i < n; i += 2)
 		{
-			_Common::setConsoleColor(BRIGHT_WHITE, c);
+			_Common::setConsoleColor(BRIGHT_WHITE, color[turn]);
 			_Common::gotoXY(pos[i * 2], pos[i * 2 + 1]);
-			putchar(a);
+			putchar(symbol[turn]);
 		}
 		for (int i = 1; i < n; i += 2)
 		{
-			_Common::setConsoleColor(BRIGHT_WHITE, d);
+			_Common::setConsoleColor(BRIGHT_WHITE, color[!turn]);
 			_Common::gotoXY(pos[i * 2], pos[i * 2 + 1]);
-			putchar(b);
+			putchar(symbol[!turn]);
 		}
-		swap(a, b), swap(c, d);
+		turn = !turn;
 		Sleep(400);
 	}
 	for (int i = 0; i < n * 2; i+=2)
@@ -325,8 +326,8 @@ void _Menu::exitScreen()
 	printRectangle(39, 23, 7, 2);
 	printRectangle(62, 23, 6, 2);
 	string str[2] = { "Yes", "No" };
-	int left[] = { 37,42,49,60,65,71 }, word[] = { 32,32,175,174 }, color[] = { 0,2 }, top = 24;
-	bool option = 0;
+	int left[] = { 37,42,49,60,65,71 }, word[] = { 32,32,175,174 }, color[] = { BLACK, GREEN }, top = 24;
+	bool choice = 0;
 	bool loop = 1;
 	auto print1 = [&]()
 	{
@@ -335,25 +336,26 @@ void _Menu::exitScreen()
 		{
 			_Common::playSound(2);
 			_Common::setConsoleColor(BRIGHT_WHITE, color[i]);
-			_Common::gotoXY(left[option * 3], top);        putchar(word[i * 2]);
-			_Common::gotoXY(left[option * 3 + 1], top);    cout << str[option];
-			_Common::gotoXY(left[option * 3 + 2], top);    putchar(word[i * 2 + 1]);
+			_Common::gotoXY(left[choice * 3], top);        putchar(word[i * 2]);
+			_Common::gotoXY(left[choice * 3 + 1], top);    cout << str[choice];
+			_Common::gotoXY(left[choice * 3 + 2], top);    putchar(word[i * 2 + 1]);
 			if(!i++)
-				option = !option;
+				choice = !choice;
 		}
 	};
 	print1();
 	while (loop)
 	{
 		int key = _Common::getConsoleInput();
-		if ((key == 3 && option == 1) || (key == 4 && option == 0))
+		if ((key == 3 && choice == 1) || (key == 4 && choice == 0))
 		{
 			print1();
 		}
 		else if (key == 6)
 		{
-			if (!option)
+			if (!choice)
 			{
+				_Common::clearConsole();
 				exit(0);
 			}
 			return;
@@ -399,8 +401,8 @@ void _Menu::loadScreen()
 		Sleep(3000);
 		return;
 	}
-	int option = 8;
-	changeFile(3, fileName, option);
+	int file = 8;
+	changeFile(3, fileName, file);
 	bool chosen = 0;
 	while (!chosen)
 	{
@@ -408,13 +410,13 @@ void _Menu::loadScreen()
 		if (key == 6)
 		{
 			_Game g;
-			g.setUpGame(3, fileName[option]);
+			g.setUpGame(3, fileName[file]);
 			g.startGame();
 			chosen = 1;
 		}
 		else if (key > 1 && key < 6)
 		{
-			changeFile(key, fileName, option);
+			changeFile(key, fileName, file);
 		}
 		else if (key == 1)
 		{
@@ -427,57 +429,72 @@ void _Menu::loadScreen()
 	}
 }
 
-void _Menu::changeFile(int key, vector<string>& fileName, int& option)
+void _Menu::changeFile(int key, vector<string>& fileName, int& file)
 {
-	if (key == 3)
+	if (key == 3 || key == 4)
 	{
-		if (option > 7)
+		if (key == 3 && file > 7)
 		{
-			//option, tu tinh
-			//Di chuyen qua page ben trai va load lai cac ten file o page
+			_Common::playSound(2);
+			file = (file / 8 - 1) * 8;
+		}
+		else if (key == 4 && file/8 < fileName.size()/8)
+		{
+			file = (file / 8 + 1) * 8;
 		}
 		else
 		{
-			//option, tu tinh
 			_Common::playSound(4);
+			return;
 		}
-		return;
+		_Common::playSound(2);
+		_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+		int i = 0;
+		for (i = file + 1; i < file + 8; i++)
+		{
+			_Common::gotoXY(0, 9 + i % 8 * 2);
+			for (int j = 0; j < 107; j++)
+				putchar(32);
+			if (i < fileName.size())
+			{
+				_Common::gotoXY(54 - fileName[i].find('-'), 9 + i % 8 * 2);
+				cout << fileName[i];
+			}
+		}
+		_Common::gotoXY(15, 16);
+		(file - 8 < 0) ? putchar(32) : putchar(60);
+		_Common::gotoXY(93, 16);
+		(file + 8 >= fileName.size()) ? putchar(32) : putchar(62);
+		_Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+		_Common::gotoXY(0, 9);
+		for (int j = 0; j < 107; j++)
+			putchar(32);
+		_Common::gotoXY(54 - fileName[file].find('-'), 9);
+		cout << fileName[file];
 	}
-	if (key == 4)
+	else if (key == 2 || key == 5)
 	{
-		if (option < fileName.size()/8)
+		if (key == 2 && file % 8 > 0) 
 		{
-			//Di chuyen qua page ben phai va load lai cac ten file o page
+			_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+			_Common::gotoXY(54 - fileName[file].find('-'), 9 + file % 8 * 2);
+			cout << fileName[file];
+			file--;
+		}
+		else if (key == 5 && file % 8 < 7 && file < fileName.size() - 1)
+		{
+			_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+			_Common::gotoXY(54 - fileName[file].find('-'), 9 + file % 8 * 2);
+			cout << fileName[file];
+			file++;
 		}
 		else
 		{
 			_Common::playSound(4);
+			return;
 		}
-		return;
-	}
-	if (key == 2)
-	{
-		if (option % 8 != 0)
-		{
-			option--;
-			//Di chuyen len
-		}
-		else
-		{
-			_Common::playSound(4);
-		}
-		return;
-	}
-	if (key == 2)
-	{
-		if (option % 8 < 8 && option < fileName.size() - 1)
-		{
-			option++;
-			//Di chuyen xuong
-		}
-		else
-		{
-			_Common::playSound(4);
-		}
+		_Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+		_Common::gotoXY(54 - fileName[file].find('-'), 9 + file % 8 * 2);
+		cout << fileName[file];
 	}
 }
