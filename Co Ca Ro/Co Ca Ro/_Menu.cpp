@@ -13,6 +13,8 @@ void _Menu::mainScreen()
 		{options[5], playPvC1},
 		{options[6], playPvC2},
 		{options[7], goBack} };
+
+	//vo day
 	bool loadMenu = 1;
 	while (true)
 	{

@@ -29,5 +29,5 @@ public:
 	static void printAnimation();
 	static void printRectangle(int, int, int, int);
 	static void changeOption(bool, bool);
-	static void changeFile(int, vector<string>& fileName, int&);
+	static void changeFile(int, vector<string>&, int&);
 };

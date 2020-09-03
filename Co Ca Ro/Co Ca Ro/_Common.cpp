@@ -128,3 +128,12 @@ void _Common::playSound(int i)
 		L"move.wav", L"enter.wav", L"error.wav", L"placed.wav", L"win.wav" };
 	PlaySound(soundFile[i], NULL, SND_FILENAME | SND_ASYNC);
 }
+
+
+int getRandomInt(int begin, int end)
+{
+	static random_device rd;
+	static mt19937 mt(rd());
+	uniform_int_distribution<int> dist(0, end);
+	return dist(mt);
+}

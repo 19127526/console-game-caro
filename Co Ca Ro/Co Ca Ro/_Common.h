@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <conio.h>
+#include <Random>
 #pragma comment(lib, "Winmm.lib")
 
 #define BLACK 0
@@ -46,3 +47,5 @@ public:
 	static int getConsoleInput();             //Lấy lệnh từ bàn phím
 	static void playSound(int);               //Phát âm thanh
 };
+
+int getRandomInt(int begin, int end);
