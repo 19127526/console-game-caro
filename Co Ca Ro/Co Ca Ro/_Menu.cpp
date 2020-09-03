@@ -13,8 +13,7 @@ void _Menu::mainScreen()
 		{options[5], playPvC1},
 		{options[6], playPvC2},
 		{options[7], goBack} };
-
-	//vo day
+	printAnimation();
 	bool loadMenu = 1;
 	while (true)
 	{
@@ -47,8 +46,6 @@ void _Menu::mainScreen()
 
 void _Menu::printLogo()
 {
-	_Common::setConsoleColor(BRIGHT_WHITE, GRAY);
-	_Common::clearConsole();
 	unsigned char logo[] = {
 		32,219,219,219,219,219,219,187,32,219,219,219,219,219,219,187,32,32,32,32,32,32,32,219,219,219,219,219,219,187,32,219,219,219,219,219,187,32,219,219,219,219,219,219,187,32,32,219,219,219,219,219,219,187,32,
 219,219,201,205,205,205,205,188,219,219,201,205,205,205,219,219,187,32,32,32,32,32,219,219,201,205,205,205,205,188,219,219,201,205,205,219,219,187,219,219,201,205,205,219,219,187,219,219,201,205,205,205,219,219,187,
@@ -110,36 +107,57 @@ void _Menu::printOptionsBoard()
 
 void _Menu::printAnimation()
 {
-	char pos[] = { 5,0,19,0,33,0,47,0,61,0,75,0,89,0,103,0,12,6,96,6,5,12,
-		           19,12,33,12,47,12,61,12,75,12,89,12,103,12,12,18,26,18,
-		           40,18,54,18,68,18,82,18,96,18,5,24,19,24,33,24,75,24,89,
-		           24,103,24,12,30,26,30,40,30,54,30,68,30,82,30,96,30 };
-	int n = (sizeof(pos) / sizeof(pos[0]))/2;
-	bool turn = 0;
-	int color[] = { LIGHT_RED, LIGHT_BLUE };
-	int symbol[] = { 79,88 };
-	int loop = 5;
+	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	_Common::clearConsole();
+	char symbolpos[] = { 5,0,19,0,33,0,47,0,61,0,75,0,89,0,103,0,12,6,96,6,5,12,19,
+				               12,33,12,47,12,61,12,75,12,89,12,103,12,12,18,26,18,40,18,
+		                       54,18,68,18,82,18,96,18,5,24,19,24,33,24,47,24,61,24,75,24,
+		                       89,24,103,24,12,30,26,30,40,30,54,30,68,30,82,30,96,30 };
+	int n = (sizeof(symbolpos) / sizeof(symbolpos[0]))/2;
+	bool turn = 0; 
+	unsigned char symbol[] = { 79,88 };
+
+	unsigned char C[] = { 32,219,219,219,219,219,219,187,219,219,201,205,205,205,205,188,219,219,186,32,32,32,32,32,
+						  219,219,186,32,32,32,32,32,200,219,219,219,219,219,219,187,32,200,205,205,205,205,205,188 };
+	unsigned char O[] = { 32,219,219,219,219,219,219,187,32,219,219,201,205,205,205,219,219,187,219,219,186,32,32,32,219,219,186,
+						  219,219,186,32,32,32,219,219,186,200,219,219,219,219,219,219,201,188,32,200,205,205,205,205,205,188,32 };
+	unsigned char A[] = { 32,219,219,219,219,219,187,32,219,219,201,205,205,219,219,187,219,219,219,219,219,219,219,186,
+						  219,219,201,205,205,219,219,186,219,219,186,32,32,219,219,186,200,205,188,32,32,200,205,188 };
+	unsigned char R[] = { 219,219,219,219,219,219,187,32,219,219,201,205,205,219,219,187,219,219,219,219,219,219,201,188,
+						  219,219,201,205,205,219,219,187,219,219,186,32,32,219,219,186,200,205,188,32,32,200,205,188 };
+	unsigned char* word[] = { C,O,C,A,R,O };
+	int color[] = { LIGHT_AQUA, AQUA, LIGHT_BLUE, BLUE, LIGHT_PURPLE, PURPLE };
+	int wide[] = { 8,9,8,8,8,9 }; int left[] = { 27, 35, 49, 57, 65, 73 };
+	int colorcount = 0;
+	int loop = 11;
 	while (loop--)
 	{
 		for (int i = 0; i < n; i += 2)
 		{
-			_Common::setConsoleColor(BRIGHT_WHITE, color[turn]);
-			_Common::gotoXY(pos[i * 2], pos[i * 2 + 1]);
+			_Common::setConsoleColor(BRIGHT_WHITE, getRandomInt(0,15));
+			_Common::gotoXY(symbolpos[i * 2], symbolpos[i * 2 + 1]);
 			putchar(symbol[turn]);
 		}
 		for (int i = 1; i < n; i += 2)
 		{
-			_Common::setConsoleColor(BRIGHT_WHITE, color[!turn]);
-			_Common::gotoXY(pos[i * 2], pos[i * 2 + 1]);
+			_Common::setConsoleColor(BRIGHT_WHITE, getRandomInt(0, 15));
+			_Common::gotoXY(symbolpos[i * 2], symbolpos[i * 2 + 1]);
 			putchar(symbol[!turn]);
 		}
+		for (int i = 0; i < 6; i++)
+		{
+			_Common::setConsoleColor(BRIGHT_WHITE, color[colorcount % 6]);
+			for (int j = 0; j < 6; j++)
+			{
+				_Common::gotoXY(left[i], 4 + j);
+				for (int k = 0; k < wide[i]; k++)
+					putchar(word[i][j * wide[i] + k]);
+			}
+			Sleep(50);
+		}
+		colorcount++;
 		turn = !turn;
-		Sleep(400);
-	}
-	for (int i = 0; i < n * 2; i+=2)
-	{
-		_Common::gotoXY(pos[i], pos[i + 1]);
-		putchar(32);
+		Sleep(200);
 	}
 }
 
@@ -181,7 +199,6 @@ void _Menu::mainMenu()
 	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	_Common::clearConsole();
 	printLogo();
-	//printAnimation();
 	printOptionsBoard();
 	current_option = 3;
 	changeOption(0, 0);

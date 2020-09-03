@@ -11,7 +11,7 @@ void _Common::setUpConsole()
 	setConsoleTitle();
 	hideScrollBars();
 	showCursor(false);
-	disableMouseInput();
+	//disableMouseInput();
 }
 
 void _Common::gotoXY(int pX, int pY)

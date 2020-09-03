@@ -76,27 +76,15 @@ void _Board::drawBoard()
 {
 	if (_pArr == NULL)
 		return;
-
-	//_Common::setConsoleColor(WHITE, BLACK);
-	//_Common::clearConsole();
 	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	_Common::clearConsole();
-	//ve khung trang
-	/*for (int i = 0; i < _size * 2 + 1; i++)
-	{
-		_Common::gotoXY(_left, _top + i);
-		for (int col = 0; col < _size * 4 + 3; col++)
-		{
-			putchar(32);
-		}
-	}*/
 
-	//Ve duong up
+	//Ve duong tren
 	_Common::gotoXY(_left + 1, _top);
 	putchar(201);
 	for (int i = 1; i < _size * 4; i++)
 	{
-		//Sleep(10);
+		Sleep(10);
 		if (i % 4 == 0)
 			putchar(209);
 		else
@@ -108,7 +96,7 @@ void _Board::drawBoard()
 	//Ve duong ben phai
 	for (int i = 1; i < _size * 2; i++)
 	{
-		//Sleep(20);
+		Sleep(20);
 		_Common::gotoXY(_size * 4 + _left + 1, i + _top);
 		if (i % 2 != 0)
 			putchar(186);
@@ -119,11 +107,11 @@ void _Board::drawBoard()
 	putchar(188);
 
 
-	//Ve duong down
+	//Ve duong duoi
 	for (int i = 1; i < _size * 4; i++)
 	{
 		_Common::gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
-		//Sleep(10);
+		Sleep(10);
 		if (i % 4 == 0)
 			putchar(207);
 		else
@@ -135,7 +123,7 @@ void _Board::drawBoard()
 	//Ve duong ben trai
 	for (int i = 1; i < _size * 2; i++)
 	{
-		//Sleep(20);
+		Sleep(20);
 		_Common::gotoXY(_left + 1, _size * 2 + _top - i);
 		if (i % 2 != 0)
 			putchar(186);
@@ -154,7 +142,7 @@ void _Board::drawBoard()
 				putchar(179);
 			}
 		}
-		//	Sleep(20);
+		Sleep(20);
 	}
 
 	//Ve cac duong ngang
@@ -168,7 +156,7 @@ void _Board::drawBoard()
 			else
 				putchar(196);
 		}
-		//Sleep(10);
+		Sleep(10);
 	}
 }
 
