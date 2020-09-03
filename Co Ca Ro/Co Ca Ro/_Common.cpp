@@ -1,22 +1,33 @@
-#include "_Common.h"
+﻿#include "_Common.h"
 
 HWND _Common::consoleWindow = GetConsoleWindow();
 HANDLE _Common::consoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+
+void _Common::setUpConsole()
+{
+	setFontInfo();
+	setAndCenterWindow();
+	disableMaximize();
+	setConsoleTitle();
+	hideScrollBars();
+	showCursor(false);
+	disableMouseInput();
+}
 
 void _Common::gotoXY(int pX, int pY)
 {
 	SetConsoleCursorPosition(consoleOutput, COORD{ (short)pX, (short)pY });
 }
 
-void _Common::movCenterAndRes()
+void _Common::setAndCenterWindow()
 {
 	RECT rectClient, rectWindow;
 	GetClientRect(consoleWindow, &rectClient), GetWindowRect(consoleWindow, &rectWindow);
 	int width = 1216;
 	int height = 784;
-	int posx = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
-		posy = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
-	MoveWindow(consoleWindow, posx, posy, width, height, TRUE);
+	int posX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
+		posY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+	MoveWindow(consoleWindow, posX, posY, width, height, TRUE);
 }
 
 void _Common::setConsoleColor(int background, int foreground)
@@ -77,15 +88,15 @@ int _Common::getConsoleInput()
 	{
 		switch (_getch())
 		{
-		case 72: //up arrow
+		case 72:				//lên
 			return 2;
-		case 75: //left arrow
+		case 75:				//trái
 			return 3;
-		case 77: //right arrow
+		case 77:				//phải
 			return 4;
-		case 80: //down arrow
+		case 80:				//xuống
 			return 5;
-		default: //none arrow
+		default:				//nút khác
 			return 0;
 		}
 	}
@@ -106,13 +117,14 @@ int _Common::getConsoleInput()
 		else if (c == 72 || c == 104) //H, h
 			return 7;
 		else
-			return 0;
+			return 0;                 //nút khác
 	}
 }
 
 
 void _Common::playSound(int i)
 {
-	static vector<const wchar_t*> soundFile{ L"moveO.wav", L"moveX.wav", L"move.wav", L"enter.wav", L"error.wav", L"placed.wav", };
+	static vector<const wchar_t*> soundFile{ L"moveO.wav", L"moveX.wav", 
+		L"move.wav", L"enter.wav", L"error.wav", L"placed.wav", L"win.wav" };
 	PlaySound(soundFile[i], NULL, SND_FILENAME | SND_ASYNC);
 }

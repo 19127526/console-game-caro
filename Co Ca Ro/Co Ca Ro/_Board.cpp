@@ -1485,12 +1485,12 @@ _Point _Board::PVC_easy()
 {
 	static random_device rd;
 	static mt19937 mt(rd());
-	static uniform_int_distribution<int> dist(0, _size);
+	static uniform_int_distribution<int> dist(0, _size - 1);
 	int i, j;
 	do
 	{
-		i = dist(mt) * 4, j = dist(mt) * 2;
-	} while (!_pArr[i][j].getCheck());
+		i = dist(mt), j = dist(mt);
+	} while (_pArr[i][j].getCheck() != 0);
 	return _Point(getXAt(i, j), getYAt(i, j));
 }
 

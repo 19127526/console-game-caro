@@ -138,17 +138,23 @@ int _Game::processFinish()
 	case -1:
 		_finish = 1;
 		_countP2Wins++;
+		_Common::playSound(6);
 		printWinPos();
-		printP1Win();
+		printP2Win();
 		break;
 	case 1:
 		_finish = 1;
 		_countP1Wins++;
 		printWinPos();
 		if (_mode == 1 || _mode == 2)
+		{
 			printBotWin();
+		}
 		else
-			printP2Win();
+		{
+			_Common::playSound(6);
+			printP1Win();
+		}
 		break;
 	case 0:
 		_finish = 1;
@@ -265,7 +271,9 @@ void _Game::printTurnSymbol()
 				_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_BLUE);
 			}
 			else
+			{
 				_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
+			}
 			_changeTurn = 0;
 		}
 		if (_turn == 1)
@@ -292,8 +300,8 @@ void _Game::printInterface()
 	cout << "Player 1:";
 	_Common::gotoXY(86 - _p1Name.length() / 2, 4);
 	cout << _p1Name;
-	_Common::gotoXY(79, 5);
-	cout << "Winning scores:";
+	_Common::gotoXY(80, 5);
+	cout << "Winning score:";
 	string score1 = to_string(_countP1Wins) + "/" + to_string(_countRounds);
 	_Common::gotoXY(86 - score1.find('/'), 6);
 	cout << score1;
@@ -311,8 +319,8 @@ void _Game::printInterface()
 	cout << "Player 2:";
 	_Common::gotoXY(86 - _p2Name.length() / 2, 17);
 	cout << _p2Name;
-	_Common::gotoXY(79, 18);
-	cout << "Winning scores:";
+	_Common::gotoXY(80, 18);
+	cout << "Winning score:";
 	string score2 = to_string(_countP2Wins) + "/" + to_string(_countRounds);
 	_Common::gotoXY(86 - score2.find('/'), 19);
 	cout << score2;
@@ -375,6 +383,10 @@ void _Game::setUpGame(int mode, string fileName)
 		{
 			_loadSymbols = true;
 			_b->loadBoard(inFile);
+		}
+		else
+		{
+			_b->resetData();
 		}
 		inFile.close();
 	}
