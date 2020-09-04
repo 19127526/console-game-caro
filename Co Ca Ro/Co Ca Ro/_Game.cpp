@@ -714,5 +714,4 @@ void _Game::printDraw()
 		}
 		Sleep(300);
 	}
-	askContinue();
 }
