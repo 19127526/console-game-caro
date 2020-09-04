@@ -6,5 +6,7 @@ using namespace std;
 int main()
 {
 	_Common::setUpConsole();
+	//_Game a;
+	//a.printDraw();
 	_Menu::mainScreen();
 }

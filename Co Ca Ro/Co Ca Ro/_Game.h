@@ -47,8 +47,8 @@ public:
 	void printWinPos();					 //In ra vị trí thắng
 	void printLoadedSymbols();			 //Load các kí hiệu X,O
 	void askContinue();				     //Hỏi tiếp tục ván cờ
-	void printP1Win()  {}				 //In ra người chơi 1 thắng
-	void printP2Win() {}				 //In ra người chơi 2 thắng
-	void printBotWin() {}				 //In ra bot thắng
-	void printDraw() {}				     //In ra kết quả hòa
+	void printP1Win();					 //In ra người chơi 1 thắng
+	void printP2Win();					 //In ra người chơi 2 thắng
+	void printBotWin();					 //In ra bot thắng
+	void printDraw();					 //In ra kết quả hòa
 };

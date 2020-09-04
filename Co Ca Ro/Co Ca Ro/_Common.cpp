@@ -125,7 +125,7 @@ int _Common::getConsoleInput()
 void _Common::playSound(int i)
 {
 	static vector<const wchar_t*> soundFile{ L"moveO.wav", L"moveX.wav", 
-		L"move.wav", L"enter.wav", L"error.wav", L"placed.wav", L"win.wav" };
+		L"move.wav", L"enter.wav", L"error.wav", L"placed.wav", L"win.wav", L"lose.wav", L"draw.wav", L"background.wav" };
 	PlaySound(soundFile[i], NULL, SND_FILENAME | SND_ASYNC);
 }
 
