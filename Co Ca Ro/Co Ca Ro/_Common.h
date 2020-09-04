@@ -48,4 +48,4 @@ public:
 	static void playSound(int);               //Phát âm thanh
 };
 
-int getRandomInt(int begin, int end);
+int getRandomInt(int begin, int end);         //Hàm lấy số nguyên ngẫu nhiên

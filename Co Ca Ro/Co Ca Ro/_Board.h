@@ -34,21 +34,21 @@ public:
 	int checkBoard(int, int, bool); //Kiểm tra vị trí trên bàn cờ
 	int testBoard(int, int);        //Kiểm tra thắng thua
 	int getCheckAtXY(int, int);     //Lấy quân cờ ở ô
-	bool checkRow(int, int, int);   //Kiểm tra 
-	bool checkCol(int, int, int);
-	bool checkDiag1(int, int, int);
-	bool checkDiag2(int, int, int);
-	long scoreAtkRow(int, int);
-	long scoreAtkCol(int, int);
-	long scoreAtkDiag1(int, int);
-	long scoreAtkDiag2(int, int);
-	long scoreDefRow(int, int);
-	long scoreDefCol(int, int);
-	long scoreDefDiag1(int, int);
-	long scoreDefDiag2(int, int);
-	_Point PVC_hard();
-	_Point PVC_easy();
-	void loadBoard(ifstream&);
-	void saveBoard(ofstream&);
-	_Point* getWinPos();
+	bool checkRow(int, int, int);   //Kiểm tra thắng ỏ dòng
+	bool checkCol(int, int, int);	//Kiểm tra thắng ở cột
+	bool checkDiag1(int, int, int); //Kiểm tra thắng ở chéo 1
+	bool checkDiag2(int, int, int); //Kiểm tra thắng ở chéo 2
+	long scoreAtkRow(int, int);     //Tính điểm tấn công của dòng
+	long scoreAtkCol(int, int);		//Tính điểm tấn công của cột
+	long scoreAtkDiag1(int, int);   //Tính điểm tấn công của chéo 1
+	long scoreAtkDiag2(int, int);   //Tính điểm tấn công của chéo 2
+	long scoreDefRow(int, int);     //Tính điểm phòng thủ của dòng
+	long scoreDefCol(int, int);		//Tính điểm phòng thủ của cột
+	long scoreDefDiag1(int, int);	//Tính điểm phòng thủ của chéo 1
+	long scoreDefDiag2(int, int);	//Tính điểm phòng thủ của chéo 2
+	_Point PVC_hard();				//Tìm vị trí chế độ máy khó
+	_Point PVC_easy();				//Tìm vị trí chế độ máy dễ
+	void loadBoard(ifstream&);		//Load vị trí X,O
+	void saveBoard(ofstream&);		//Lưu vị trí X,O
+	_Point* getWinPos();			//Lấy vị trí thắng
 };

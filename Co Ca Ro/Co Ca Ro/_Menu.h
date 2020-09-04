@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -10,24 +10,24 @@ using namespace std;
 class _Menu
 {
 private:
-	static bool exitGame;
-	static int current_option;
-	const static string options[8];
+	static bool exitGame;				//Cờ thoát game
+	static int current_option;			//Lựa chọn hiện tại
+	const static string options[8];		//Tên các lựa chọn
 public:
-	static void mainScreen();
-	static void mainMenu();
-	static void playMenu();
-	static void loadScreen();
-	static void helpScreen();
-	static void exitScreen();
-	static void playPvP();
-	static void playPvC1();
-	static void playPvC2();
-	static void printLogo();
-	static void goBack() {}
-	static void printOptionsBoard();
-	static void printAnimation();
-	static void printRectangle(int, int, int, int);
-	static void changeOption(bool, bool);
-	static void changeFile(int, vector<string>&, int&);
+	static void mainScreen();								//Màn hình chính
+	static void mainMenu();									//Menu
+	static void playMenu();									//Menu play
+	static void loadScreen();								//Màn hình load file
+	static void helpScreen();								//Màn hình hướng dẫn
+	static void exitScreen();								//Màn hình thoát
+	static void playPvP();									//Chế độ người-người
+	static void playPvC1();									//Chế độ người-máy(dễ)
+	static void playPvC2();									//Chế độ người-máy(khó)
+	static void printLogo();								//In ra logo
+	static void goBack() {}									//Trở về menu
+	static void printOptionsBoard();						//In ra các bảng lựa chọn
+	static void printAnimation();							//In hiệu ứng mở đầu
+	static void printRectangle(int, int, int, int);			//Vẽ hình chữ nhật
+	static void changeOption(bool, bool);					//Thay đổi lựa chọn
+	static void changeFile(int, vector<string>&, int&);		//Thay đổi file
 };
