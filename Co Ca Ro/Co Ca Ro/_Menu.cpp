@@ -1,4 +1,4 @@
-#include "_Menu.h"
+﻿#include "_Menu.h"
 int _Menu::current_option;
 const string _Menu::options[8] = { "Play", "Load", "Help", "Exit", " PvP ", "PvC(easy)", "PvC(hard)", "Back" };
 
@@ -13,6 +13,7 @@ void _Menu::mainScreen()
 		{options[5], playPvC1},
 		{options[6], playPvC2},
 		{options[7], goBack} };
+	_Common::playSound(9);
 	printAnimation();
 	bool loadMenu = 1;
 	while (true)
@@ -41,12 +42,12 @@ void _Menu::mainScreen()
 			loadMenu = 0;
 		}
 	}
+
 	_Common::clearConsole();
 }
 
 void _Menu::printLogo()
 {
-	_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
 	unsigned char logo[] = {
 		32,219,219,219,219,219,219,187,32,219,219,219,219,219,219,187,32,32,32,32,32,32,32,219,219,219,219,219,219,187,32,219,219,219,219,219,187,32,219,219,219,219,219,219,187,32,32,219,219,219,219,219,219,187,32,
 219,219,201,205,205,205,205,188,219,219,201,205,205,205,219,219,187,32,32,32,32,32,219,219,201,205,205,205,205,188,219,219,201,205,205,219,219,187,219,219,201,205,205,219,219,187,219,219,201,205,205,205,219,219,187,
@@ -66,7 +67,7 @@ void _Menu::printLogo()
 
 void _Menu::printOptionsBoard()
 {
-	_Common::setConsoleColor(BRIGHT_WHITE, GRAY);
+	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	int left = 48;
 	int top = 20;
 	_Common::gotoXY(left, top);
@@ -158,11 +159,11 @@ void _Menu::printAnimation()
 		}
 		colorcount++;
 		turn = !turn;
-		Sleep(200);
+		Sleep(250);
 	}
 }
 
-void _Menu::changeOption(bool direction, bool flag) //0 for up, 1 for down
+void _Menu::changeOption(bool direction, bool flag) //0: lên, 1: xuống
 {
 	int top = 21;
 	if ((direction == 0 && (current_option == 4 || current_option == 0))
@@ -171,7 +172,7 @@ void _Menu::changeOption(bool direction, bool flag) //0 for up, 1 for down
 		_Common::playSound(4);
 		return;
 	}
-	_Common::setConsoleColor(BRIGHT_WHITE, GRAY);
+	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	_Common::gotoXY(54 - (int)options[current_option].length() / 2, top + current_option % 4 * 2);
 	cout << options[current_option];
 	if (flag)
@@ -185,7 +186,7 @@ void _Menu::changeOption(bool direction, bool flag) //0 for up, 1 for down
 	if(flag)
 	{
 		_Common::playSound(2);
-		_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
+		_Common::setConsoleColor(BRIGHT_WHITE, RED);
 		_Common::gotoXY(44, top + current_option % 4 * 2);
 		putchar(175);
 		_Common::gotoXY(54 - (int)options[current_option].length() / 2, top + current_option % 4 * 2);
@@ -197,7 +198,7 @@ void _Menu::changeOption(bool direction, bool flag) //0 for up, 1 for down
 
 void _Menu::mainMenu()
 {
-	_Common::setConsoleColor(BRIGHT_WHITE, GRAY);
+	_Common::setConsoleColor(BRIGHT_WHITE, RED);
 	_Common::clearConsole();
 	printLogo();
 	printOptionsBoard();
@@ -250,7 +251,7 @@ void _Menu::helpScreen()
 	_Common::gotoXY(line3, line2);
 	putchar(197);
 
-
+	_Common::setConsoleColor(BRIGHT_WHITE, RED);
 	_Common::gotoXY(left + 3, top + 2);
 	cout << "Moves:";
 	_Common::gotoXY(left + 20, top + 1);
@@ -296,8 +297,9 @@ void _Menu::helpScreen()
 	_Common::gotoXY(left + 13, top + 22);
 	cout << "+ Dang Tu Thieu    (19127557)       + Luong Truong Thinh (19127559)";
 
+	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	printRectangle(49, 27, 8, 2);
-	_Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+	_Common::setConsoleColor(BRIGHT_WHITE, RED);
 	_Common::gotoXY(47, 28);
 	putchar(175);
 	_Common::gotoXY(52, 28);
@@ -338,15 +340,16 @@ void _Menu::exitScreen()
 {
 	_Common::showCursor(false);
 	_Common::clearConsole();
-	printLogo();
 	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	printRectangle(36, 18, 35, 8);
-	_Common::gotoXY(44, 20);
-	cout << "Do you want to exit?";
 	printRectangle(39, 23, 7, 2);
 	printRectangle(62, 23, 6, 2);
+	_Common::setConsoleColor(BRIGHT_WHITE, RED);
+	printLogo();
+	_Common::gotoXY(44, 20);
+	cout << "Do you want to exit?";
 	string str[2] = { "Yes", "No" };
-	int left[] = { 37,42,49,60,65,71 }, word[] = { 32,32,175,174 }, color[] = { BLACK, GREEN }, top = 24;
+	int left[] = { 37,42,49,60,65,71 }, word[] = { 32,32,175,174 }, color[] = { BLACK, RED }, top = 24;
 	bool choice = 0;
 	bool loop = 1;
 	auto print1 = [&]()
@@ -468,7 +471,7 @@ void _Menu::changeFile(int key, vector<string>& fileName, int& file)
 			return;
 		}
 		_Common::playSound(2);
-		_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+		_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 		int i = 0;
 		for (i = file + 1; i < file + 8; i++)
 		{
@@ -485,7 +488,7 @@ void _Menu::changeFile(int key, vector<string>& fileName, int& file)
 		(file - 8 < 0) ? putchar(32) : putchar(60);
 		_Common::gotoXY(93, 16);
 		(file + 8 >= fileName.size()) ? putchar(32) : putchar(62);
-		_Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+		_Common::setConsoleColor(BRIGHT_WHITE, RED);
 		_Common::gotoXY(0, 9);
 		for (int j = 0; j < 107; j++)
 			putchar(32);
@@ -496,14 +499,14 @@ void _Menu::changeFile(int key, vector<string>& fileName, int& file)
 	{
 		if (key == 2 && file % 8 > 0) 
 		{
-			_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+			_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 			_Common::gotoXY(54 - fileName[file].find('-'), 9 + file % 8 * 2);
 			cout << fileName[file];
 			file--;
 		}
 		else if (key == 5 && file % 8 < 7 && file < fileName.size() - 1)
 		{
-			_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+			_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 			_Common::gotoXY(54 - fileName[file].find('-'), 9 + file % 8 * 2);
 			cout << fileName[file];
 			file++;
@@ -513,7 +516,7 @@ void _Menu::changeFile(int key, vector<string>& fileName, int& file)
 			_Common::playSound(4);
 			return;
 		}
-		_Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+		_Common::setConsoleColor(BRIGHT_WHITE, RED);
 		_Common::gotoXY(54 - fileName[file].find('-'), 9 + file % 8 * 2);
 		cout << fileName[file];
 	}

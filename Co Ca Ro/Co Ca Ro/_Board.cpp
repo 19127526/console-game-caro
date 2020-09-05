@@ -84,7 +84,7 @@ void _Board::drawBoard()
 	putchar(201);
 	for (int i = 1; i < _size * 4; i++)
 	{
-		Sleep(10);
+		Sleep(5);
 		if (i % 4 == 0)
 			putchar(209);
 		else
@@ -96,7 +96,7 @@ void _Board::drawBoard()
 	//Ve duong ben phai
 	for (int i = 1; i < _size * 2; i++)
 	{
-		Sleep(20);
+		Sleep(10);
 		_Common::gotoXY(_size * 4 + _left + 1, i + _top);
 		if (i % 2 != 0)
 			putchar(186);
@@ -111,7 +111,7 @@ void _Board::drawBoard()
 	for (int i = 1; i < _size * 4; i++)
 	{
 		_Common::gotoXY(_size * 4 + _left - i + 1, _size * 2 + _top);
-		Sleep(10);
+		Sleep(5);
 		if (i % 4 == 0)
 			putchar(207);
 		else
@@ -123,7 +123,7 @@ void _Board::drawBoard()
 	//Ve duong ben trai
 	for (int i = 1; i < _size * 2; i++)
 	{
-		Sleep(20);
+		Sleep(10);
 		_Common::gotoXY(_left + 1, _size * 2 + _top - i);
 		if (i % 2 != 0)
 			putchar(186);
@@ -142,7 +142,7 @@ void _Board::drawBoard()
 				putchar(179);
 			}
 		}
-		Sleep(20);
+		Sleep(10);
 	}
 
 	//Ve cac duong ngang
@@ -156,7 +156,7 @@ void _Board::drawBoard()
 			else
 				putchar(196);
 		}
-		Sleep(10);
+		Sleep(5);
 	}
 }
 
@@ -409,33 +409,32 @@ bool _Board::checkDiag1(int i, int j, int turn)
 			_winPos = new _Point[5]{ {LR_Row,LR_Col},{LR_Row - 1 ,LR_Col - 1},{LR_Row - 2,LR_Col - 2},{LR_Row - 3,LR_Col - 3},{LR_Row - 4,LR_Col - 4} };
 			return true;
 		}
-		/*	else*/ if (UL_Col == 0 && _pArr[UL_Row][UL_Col].getCheck() == turn)
+		if (UL_Col == 0 && _pArr[UL_Row][UL_Col].getCheck() == turn)
 		{
 			_winPos = new _Point[5]{ {UL_Row + 0 ,UL_Col + 0},{UL_Row + 1,UL_Col + 1},{UL_Row + 2,UL_Col + 2},{UL_Row + 3,UL_Col + 3},{UL_Row + 4,UL_Col + 4} };
 			return true;
 		}
-		/*	else */if (LR_Row == _size - 1 && _pArr[LR_Row][LR_Col].getCheck() == turn)
+		if (LR_Row == _size - 1 && _pArr[LR_Row][LR_Col].getCheck() == turn)
 		{
 			_winPos = new _Point[5]{ {LR_Row,LR_Col},{LR_Row - 1 ,LR_Col - 1},{LR_Row - 2,LR_Col - 2},{LR_Row - 3,LR_Col - 3},{LR_Row - 4,LR_Col - 4} };
 			return true;
 		}
-		/*else*/ if (UL_Row == 0 && _pArr[UL_Row][UL_Col].getCheck() == turn)
-		{
-			_winPos = new _Point[5]{ {LR_Row - 1 ,LR_Col - 1},{LR_Row - 2,LR_Col - 2},{LR_Row - 3,LR_Col - 3},{LR_Row - 4,LR_Col - 4},{LR_Row - 5,LR_Col - 5} };
-			/*_winPos = new _Point[5]{{LR_Row - 5 ,LR_Col - 5},{LR_Row - 4,LR_Col - 4},{LR_Row - 3,LR_Col - 3},{LR_Row - 2,LR_Col - 2},{LR_Row - 1,LR_Col - 1}};*/
-			return true;
-		}
-		/*else */if (_pArr[LR_Row][LR_Col].getCheck() == -turn && _pArr[UL_Row][UL_Col].getCheck() != -turn)
+		if (UL_Row == 0 && _pArr[UL_Row][UL_Col].getCheck() == turn)
 		{
 			_winPos = new _Point[5]{ {LR_Row - 1 ,LR_Col - 1},{LR_Row - 2,LR_Col - 2},{LR_Row - 3,LR_Col - 3},{LR_Row - 4,LR_Col - 4},{LR_Row - 5,LR_Col - 5} };
 			return true;
 		}
-		/*	else */if (_pArr[UL_Row][UL_Col].getCheck() == -turn && _pArr[LR_Row][LR_Col].getCheck() != -turn)
+		if (_pArr[LR_Row][LR_Col].getCheck() == -turn && _pArr[UL_Row][UL_Col].getCheck() != -turn)
+		{
+			_winPos = new _Point[5]{ {LR_Row - 1 ,LR_Col - 1},{LR_Row - 2,LR_Col - 2},{LR_Row - 3,LR_Col - 3},{LR_Row - 4,LR_Col - 4},{LR_Row - 5,LR_Col - 5} };
+			return true;
+		}
+		if (_pArr[UL_Row][UL_Col].getCheck() == -turn && _pArr[LR_Row][LR_Col].getCheck() != -turn)
 		{
 			_winPos = new _Point[5]{ {UL_Row + 1 ,UL_Col + 1},{UL_Row + 2,UL_Col + 2},{UL_Row + 3,UL_Col + 3},{UL_Row + 4,UL_Col + 4},{UL_Row + 5,UL_Col + 5} };
 			return true;
 		}
-		/*else*/ if (_pArr[UL_Row][UL_Col].getCheck() == _pArr[LR_Row][LR_Col].getCheck() && _pArr[LR_Row][LR_Col].getCheck() != -turn)
+		if (_pArr[UL_Row][UL_Col].getCheck() == _pArr[LR_Row][LR_Col].getCheck() && _pArr[LR_Row][LR_Col].getCheck() != -turn)
 		{
 			_winPos = new _Point[5]{ {UL_Row + 1 ,UL_Col + 1},{UL_Row + 2,UL_Col + 2},{UL_Row + 3,UL_Col + 3},{UL_Row + 4,UL_Col + 4},{UL_Row + 5,UL_Col + 5} };
 			return true;
@@ -1217,256 +1216,6 @@ long _Board::scoreDefCol(int row, int col)
 		score_row *= 2;
 	}
 	return score_row;
-}
-long _Board::scoreDefDiag1(int row, int col)
-{
-	long score_diag1 = 0;
-	long score_attack = 0;
-	int score_player1 = 0;
-	int score_player2 = 0;
-	int score_com1 = 0;
-	int score_com2 = 0;
-	for (int count1 = 1; count1 < 6 && row + count1 < _size && col + count1 < _size; count1++)
-	{
-		if (_pArr[row + count1][col + count1].getCheck() == 1)
-		{
-			score_player1++;
-			break;
-		}
-		if (_pArr[row + count1][col + count1].getCheck() == -1)
-		{
-			score_com1++;
-		}
-		if (_pArr[row + count1][col + count1].getCheck() == 0)
-		{
-			for (int count2 = 2; count2 < 7 && row + count2 < _size && col + count2 < _size; count2++)
-			{
-				if (_pArr[row + count2][col + count2].getCheck() == 1)
-				{
-					score_player2++;
-					break;
-				}
-				if (_pArr[row + count2][col + count2].getCheck() == -1)
-				{
-					score_com2++;
-				}
-				if (_pArr[row + count2][col + count2].getCheck() == 0)
-				{
-					break;
-				}
-			}
-			break;
-		}
-	}
-	for (int count1 = 1; count1 < 6 && row - count1 >= 0 && col - count1 >= 0; count1++)
-	{
-		if (_pArr[row - count1][col - count1].getCheck() == 1)
-		{
-			score_player1++;
-			break;
-		}
-		if (_pArr[row - count1][col - count1].getCheck() == -1)
-		{
-			score_com1++;
-		}
-		if (_pArr[row - count1][col - count1].getCheck() == 0)
-		{
-			for (int count2 = 2; count2 < 7 && row - count2 >= 0 && col - count2 >= 0; count2++)
-			{
-				if (_pArr[row - count2][col - count2].getCheck() == 1)
-				{
-					score_player2++;
-					break;
-				}
-				if (_pArr[row - count2][col - count2].getCheck() == -1)
-				{
-					score_com2++;
-				}
-				if (_pArr[row - count2][col - count2].getCheck() == 0)
-				{
-					break;
-				}
-			}
-			break;
-		}
-	}
-	if (score_player1 == 2)
-	{
-		return 0;
-	}
-	if (score_player1 == 0)
-	{
-		score_diag1 += defPoint[score_com1] * 2;
-	}
-	else
-	{
-		score_diag1 += defPoint[score_com1];
-	}
-	if (score_player2 == 0)
-		score_diag1 += defPoint[score_com2] * 2;
-	else
-		score_diag1 += defPoint[score_com2];
-	if (score_com1 >= score_com2)
-	{
-		score_diag1 -= 1;
-	}
-	else
-	{
-		score_diag1 -= 2;
-	}
-	if (score_com1 == 4)
-	{
-		score_diag1 *= 2;
-	}
-	return score_diag1;
-}
-long _Board::scoreDefDiag2(int row, int col)
-{
-	long score_diag2 = 0;
-	long score_attack = 0;
-	int score_player1 = 0;
-	int score_player2 = 0;
-	int score_com1 = 0;
-	int score_com2 = 0;
-	for (int count1 = 1; count1 < 6 && row + count1 < _size && col - count1 < _size; count1++)
-	{
-		if (_pArr[row + count1][col - count1].getCheck() == 1)
-		{
-			score_player1++;
-			break;
-		}
-		if (_pArr[row + count1][col - count1].getCheck() == -1)
-		{
-			score_com1++;
-		}
-		if (_pArr[row + count1][col - count1].getCheck() == 0)
-		{
-			for (int count2 = 2; count2 < 7 && row + count2 < _size && col - count2 < _size; count2++)
-			{
-				if (_pArr[row + count2][col - count2].getCheck() == 1)
-				{
-					score_player2++;
-					break;
-				}
-				if (_pArr[row + count2][col - count2].getCheck() == -1)
-				{
-					score_com2++;
-				}
-				if (_pArr[row + count2][col - count2].getCheck() == 0)
-				{
-					break;
-				}
-			}
-			break;
-		}
-	}
-	for (int count1 = 1; count1 < 6 && row - count1 >= 0 && col + count1 >= 0; count1++)
-	{
-		if (_pArr[row - count1][col + count1].getCheck() == 1)
-		{
-			score_player1++;
-			break;
-		}
-		if (_pArr[row - count1][col + count1].getCheck() == -1)
-		{
-			score_com1++;
-		}
-		if (_pArr[row - count1][col + count1].getCheck() == 0)
-		{
-			for (int count2 = 2; count2 < 7 && row - count2 >= 0 && col + count2 >= 0; count2++)
-			{
-				if (_pArr[row - count2][col + count2].getCheck() == 1)
-				{
-					score_player2++;
-					break;
-				}
-				if (_pArr[row - count2][col + count2].getCheck() == -1)
-				{
-					score_com2++;
-				}
-				if (_pArr[row - count2][col + count2].getCheck() == 0)
-				{
-					break;
-				}
-			}
-			break;
-		}
-	}
-	if (score_player1 == 2)
-	{
-		return 0;
-	}
-	if (score_player1 == 0)
-	{
-		score_diag2 += defPoint[score_com1] * 2;
-	}
-	else
-	{
-		score_diag2 += defPoint[score_com1];
-	}
-	if (score_player2 == 0)
-		score_diag2 += defPoint[score_com2] * 2;
-	else
-		score_diag2 += defPoint[score_com2];
-	if (score_com1 >= score_com2)
-	{
-		score_diag2 -= 1;
-	}
-	else
-	{
-		score_diag2 -= 2;
-	}
-	if (score_com1 == 4)
-	{
-		score_diag2 *= 2;
-	}
-	return score_diag2;
-}
-
-_Point _Board::PVC_hard()
-{
-	int row = 0;
-	int col = 0;
-	long point = 0;
-	for (int i = 0; i < _size; i++)
-	{
-		for (int j = 0; j < _size; j++)
-		{
-			long atk = 0;
-			long def = 0;
-			if (_pArr[i][j].getCheck() == 0)
-			{
-				atk += scoreAtkRow(i, j);
-				atk += scoreAtkCol(i, j);
-				atk += scoreAtkDiag1(i, j);
-				atk += scoreAtkDiag2(i, j);
-				def += scoreDefRow(i, j);
-				def += scoreDefCol(i, j);
-				def += scoreDefDiag1(i, j);
-				def += scoreDefDiag2(i, j);
-
-				if (atk > def)
-				{
-					if (point < atk)
-					{
-						point = atk;
-						row = i;
-						col = j;
-					}
-				}
-				else
-				{
-					if (point < def)
-					{
-						point = def;
-						row = i;
-						col = j;
-					}
-				}
-			}
-		}
-	}
-	return _Point(getXAt(row, col), getYAt(row, col));
 }
 
 _Point _Board::PVC_easy()

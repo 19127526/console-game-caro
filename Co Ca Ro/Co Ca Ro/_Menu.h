@@ -23,8 +23,8 @@ public:
 	static void playPvP();									//Chế độ người-người
 	static void playPvC1();									//Chế độ người-máy(dễ)
 	static void playPvC2();									//Chế độ người-máy(khó)
-	static void goBack() {}									//Trở về menu
 	static void printLogo();								//In ra logo
+	static void goBack() {}									//Trở về menu
 	static void printOptionsBoard();						//In ra các bảng lựa chọn
 	static void printAnimation();							//In hiệu ứng mở đầu
 	static void printRectangle(int, int, int, int);			//Vẽ hình chữ nhật
