@@ -525,6 +525,7 @@ bool _Board::checkDiag2(int i, int j, int turn)
 	}
 	return false;
 }
+
 long _Board::scoreAtkRow(int row, int col)
 {
 	long score_col = 0;
@@ -535,11 +536,11 @@ long _Board::scoreAtkRow(int row, int col)
 	int score_com2 = 0;
 	for (int count1 = 1; count1 < 6 && col + count1 < _size; count1++)
 	{
-		if (_pArr[row][col + count1].getCheck() == 1)
+		if (_pArr[row][col + count1].getCheck() == -1)
 		{
 			score_player1++;
 		}
-		if (_pArr[row][col + count1].getCheck() == -1)
+		if (_pArr[row][col + count1].getCheck() == 1)
 		{
 			score_com1++;
 			break;
@@ -548,11 +549,11 @@ long _Board::scoreAtkRow(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && col + count2 < _size; count2++)
 			{
-				if (_pArr[row][col + count2].getCheck() == 1)
+				if (_pArr[row][col + count2].getCheck() == -1)
 				{
 					score_player2++;
 				}
-				if (_pArr[row][col + count2].getCheck() == -1)
+				if (_pArr[row][col + count2].getCheck() == 1)
 				{
 					score_com2++;
 					break;
@@ -567,11 +568,11 @@ long _Board::scoreAtkRow(int row, int col)
 	}
 	for (int count1 = 1; count1 < 6 && col - count1 >= 0; count1++)
 	{
-		if (_pArr[row][col - count1].getCheck() == 1)
+		if (_pArr[row][col - count1].getCheck() == -1)
 		{
 			score_player1++;
 		}
-		if (_pArr[row][col - count1].getCheck() == -1)
+		if (_pArr[row][col - count1].getCheck() == 1)
 		{
 			score_com1++;
 			break;
@@ -657,11 +658,11 @@ long _Board::scoreAtkCol(int row, int col)
 	int score_com2 = 0;
 	for (int count1 = 1; count1 < 6 && row + count1 < _size; count1++)
 	{
-		if (_pArr[row + count1][col].getCheck() == 1)
+		if (_pArr[row + count1][col].getCheck() == -1)
 		{
 			score_player1++;
 		}
-		if (_pArr[row + count1][col].getCheck() == -1)
+		if (_pArr[row + count1][col].getCheck() == 1)
 		{
 			score_com1++;
 			break;
@@ -670,11 +671,11 @@ long _Board::scoreAtkCol(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row + count2 < _size; count2++)
 			{
-				if (_pArr[row + count2][col].getCheck() == 1)
+				if (_pArr[row + count2][col].getCheck() == -1)
 				{
 					score_player2++;
 				}
-				if (_pArr[row + count2][col].getCheck() == -1)
+				if (_pArr[row + count2][col].getCheck() == 1)
 				{
 					score_com2++;
 					break;
@@ -689,11 +690,11 @@ long _Board::scoreAtkCol(int row, int col)
 	}
 	for (int count1 = 1; count1 < 6 && row - count1 >= 0; count1++)
 	{
-		if (_pArr[row - count1][col].getCheck() == 1)
+		if (_pArr[row - count1][col].getCheck() == -1)
 		{
 			score_player1++;
 		}
-		if (_pArr[row - count1][col].getCheck() == -1)
+		if (_pArr[row - count1][col].getCheck() == 1)
 		{
 			score_com1++;
 			break;
@@ -702,11 +703,11 @@ long _Board::scoreAtkCol(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row - count2 >= 0; count2++)
 			{
-				if (_pArr[row - count2][col].getCheck() == 1)
+				if (_pArr[row - count2][col].getCheck() == -1)
 				{
 					score_player2++;
 				}
-				if (_pArr[row - count2][col].getCheck() == -1)
+				if (_pArr[row - count2][col].getCheck() == 1)
 				{
 					score_com2++;
 					break;
@@ -779,11 +780,11 @@ long _Board::scoreAtkDiag1(int row, int col)
 	int score_com2 = 0;
 	for (int count1 = 1; count1 < 6 && row + count1 < _size && col + count1 < _size; count1++)
 	{
-		if (_pArr[row + count1][col + count1].getCheck() == 1)
+		if (_pArr[row + count1][col + count1].getCheck() == -1)
 		{
 			score_player1++;
 		}
-		if (_pArr[row + count1][col + count1].getCheck() == -1)
+		if (_pArr[row + count1][col + count1].getCheck() == 1)
 		{
 			score_com1++;
 			break;
@@ -792,11 +793,11 @@ long _Board::scoreAtkDiag1(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row + count2 < _size && col + count2 < _size; count2++)
 			{
-				if (_pArr[row + count2][col + count2].getCheck() == 1)
+				if (_pArr[row + count2][col + count2].getCheck() == -1)
 				{
 					score_player2++;
 				}
-				if (_pArr[row + count2][col + count2].getCheck() == -1)
+				if (_pArr[row + count2][col + count2].getCheck() == 1)
 				{
 					score_com2++;
 					break;
@@ -811,11 +812,11 @@ long _Board::scoreAtkDiag1(int row, int col)
 	}
 	for (int count1 = 1; count1 < 6 && row - count1 >= 0 && col - count1 >= 0; count1++)
 	{
-		if (_pArr[row - count1][col - count1].getCheck() == 1)
+		if (_pArr[row - count1][col - count1].getCheck() == -1)
 		{
 			score_player1++;
 		}
-		if (_pArr[row - count1][col - count1].getCheck() == -1)
+		if (_pArr[row - count1][col - count1].getCheck() == 1)
 		{
 			score_com1++;
 			break;
@@ -824,11 +825,11 @@ long _Board::scoreAtkDiag1(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row - count2 >= 0 && col - count2 >= 0; count2++)
 			{
-				if (_pArr[row - count2][col - count2].getCheck() == 1)
+				if (_pArr[row - count2][col - count2].getCheck() == -1)
 				{
 					score_player2++;
 				}
-				if (_pArr[row - count2][col - count2].getCheck() == -1)
+				if (_pArr[row - count2][col - count2].getCheck() == 1)
 				{
 					score_com2++;
 					break;
@@ -901,11 +902,11 @@ long _Board::scoreAtkDiag2(int row, int col)
 	int score_com2 = 0;
 	for (int count1 = 1; count1 < 6 && row + count1 < _size && col - count1 < _size; count1++)
 	{
-		if (_pArr[row + count1][col - count1].getCheck() == 1)
+		if (_pArr[row + count1][col - count1].getCheck() == -1)
 		{
 			score_player1++;
 		}
-		if (_pArr[row + count1][col - count1].getCheck() == -1)
+		if (_pArr[row + count1][col - count1].getCheck() == 1)
 		{
 			score_com1++;
 			break;
@@ -914,11 +915,11 @@ long _Board::scoreAtkDiag2(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row + count2 < _size && col - count2 < _size; count2++)
 			{
-				if (_pArr[row + count2][col - count2].getCheck() == 1)
+				if (_pArr[row + count2][col - count2].getCheck() == -1)
 				{
 					score_player2++;
 				}
-				if (_pArr[row + count2][col - count2].getCheck() == -1)
+				if (_pArr[row + count2][col - count2].getCheck() == 1)
 				{
 					score_com2++;
 					break;
@@ -933,11 +934,11 @@ long _Board::scoreAtkDiag2(int row, int col)
 	}
 	for (int count1 = 1; count1 < 6 && row - count1 >= 0 && col + count1 >= 0; count1++)
 	{
-		if (_pArr[row - count1][col + count1].getCheck() == 1)
+		if (_pArr[row - count1][col + count1].getCheck() == -1)
 		{
 			score_player1++;
 		}
-		if (_pArr[row - count1][col + count1].getCheck() == -1)
+		if (_pArr[row - count1][col + count1].getCheck() == 1)
 		{
 			score_com1++;
 			break;
@@ -946,11 +947,11 @@ long _Board::scoreAtkDiag2(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row - count2 >= 0 && col + count2 >= 0; count2++)
 			{
-				if (_pArr[row - count2][col + count2].getCheck() == 1)
+				if (_pArr[row - count2][col + count2].getCheck() == -1)
 				{
 					score_player2++;
 				}
-				if (_pArr[row - count2][col + count2].getCheck() == -1)
+				if (_pArr[row - count2][col + count2].getCheck() == 1)
 				{
 					score_com2++;
 					break;
@@ -1023,12 +1024,12 @@ long _Board::scoreDefRow(int row, int col)
 	int score_com2 = 0;
 	for (int count1 = 1; count1 < 6 && col + count1 < _size; count1++)
 	{
-		if (_pArr[row][col + count1].getCheck() == 1)
+		if (_pArr[row][col + count1].getCheck() == -1)
 		{
 			score_player1++;
 			break;
 		}
-		if (_pArr[row][col + count1].getCheck() == -1)
+		if (_pArr[row][col + count1].getCheck() == 1)
 		{
 			score_com1++;
 		}
@@ -1036,12 +1037,12 @@ long _Board::scoreDefRow(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && col + count2 < _size; count2++)
 			{
-				if (_pArr[row][col + count2].getCheck() == 1)
+				if (_pArr[row][col + count2].getCheck() == -1)
 				{
 					score_player2++;
 					break;
 				}
-				if (_pArr[row][col + count2].getCheck() == -1)
+				if (_pArr[row][col + count2].getCheck() == 1)
 				{
 					score_com2++;
 				}
@@ -1055,12 +1056,12 @@ long _Board::scoreDefRow(int row, int col)
 	}
 	for (int count1 = 1; count1 < 6 && col - count1 >= 0; count1++)
 	{
-		if (_pArr[row][col - count1].getCheck() == 1)
+		if (_pArr[row][col - count1].getCheck() == -1)
 		{
 			score_player1++;
 			break;
 		}
-		if (_pArr[row][col - count1].getCheck() == -1)
+		if (_pArr[row][col - count1].getCheck() == 1)
 		{
 			score_com1++;
 		}
@@ -1068,12 +1069,12 @@ long _Board::scoreDefRow(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && col - count2 >= 0; count2++)
 			{
-				if (_pArr[row][col - count2].getCheck() == 1)
+				if (_pArr[row][col - count2].getCheck() == -1)
 				{
 					score_player2++;
 					break;
 				}
-				if (_pArr[row][col - count2].getCheck() == -1)
+				if (_pArr[row][col - count2].getCheck() == 1)
 				{
 					score_com2++;
 				}
@@ -1125,12 +1126,12 @@ long _Board::scoreDefCol(int row, int col)
 	int score_com2 = 0;
 	for (int count1 = 1; count1 < 6 && row + count1 < _size; count1++)
 	{
-		if (_pArr[row + count1][col].getCheck() == 1)
+		if (_pArr[row + count1][col].getCheck() == -1)
 		{
 			score_player1++;
 			break;
 		}
-		if (_pArr[row + count1][col].getCheck() == -1)
+		if (_pArr[row + count1][col].getCheck() == 1)
 		{
 			score_com1++;
 		}
@@ -1138,12 +1139,12 @@ long _Board::scoreDefCol(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row + count2 < _size; count2++)
 			{
-				if (_pArr[row + count2][col].getCheck() == 1)
+				if (_pArr[row + count2][col].getCheck() == -1)
 				{
 					score_player2++;
 					break;
 				}
-				if (_pArr[row + count2][col].getCheck() == -1)
+				if (_pArr[row + count2][col].getCheck() == 1)
 				{
 					score_com2++;
 				}
@@ -1157,12 +1158,12 @@ long _Board::scoreDefCol(int row, int col)
 	}
 	for (int count1 = 1; count1 < 6 && row - count1 >= 0; count1++)
 	{
-		if (_pArr[row - count1][col].getCheck() == 1)
+		if (_pArr[row - count1][col].getCheck() == -1)
 		{
 			score_player1++;
 			break;
 		}
-		if (_pArr[row - count1][col].getCheck() == -1)
+		if (_pArr[row - count1][col].getCheck() == 1)
 		{
 			score_com1++;
 		}
@@ -1170,12 +1171,12 @@ long _Board::scoreDefCol(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row - count2 >= 0; count2++)
 			{
-				if (_pArr[row - count2][col].getCheck() == 1)
+				if (_pArr[row - count2][col].getCheck() == -1)
 				{
 					score_player2++;
 					break;
 				}
-				if (_pArr[row - count2][col].getCheck() == -1)
+				if (_pArr[row - count2][col].getCheck() == 1)
 				{
 					score_com2++;
 				}
@@ -1217,7 +1218,6 @@ long _Board::scoreDefCol(int row, int col)
 	}
 	return score_row;
 }
-
 long _Board::scoreDefDiag1(int row, int col)
 {
 	long score_diag1 = 0;
@@ -1228,12 +1228,12 @@ long _Board::scoreDefDiag1(int row, int col)
 	int score_com2 = 0;
 	for (int count1 = 1; count1 < 6 && row + count1 < _size && col + count1 < _size; count1++)
 	{
-		if (_pArr[row + count1][col + count1].getCheck() == 1)
+		if (_pArr[row + count1][col + count1].getCheck() == -1)
 		{
 			score_player1++;
 			break;
 		}
-		if (_pArr[row + count1][col + count1].getCheck() == -1)
+		if (_pArr[row + count1][col + count1].getCheck() == 1)
 		{
 			score_com1++;
 		}
@@ -1241,12 +1241,12 @@ long _Board::scoreDefDiag1(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row + count2 < _size && col + count2 < _size; count2++)
 			{
-				if (_pArr[row + count2][col + count2].getCheck() == 1)
+				if (_pArr[row + count2][col + count2].getCheck() == -1)
 				{
 					score_player2++;
 					break;
 				}
-				if (_pArr[row + count2][col + count2].getCheck() == -1)
+				if (_pArr[row + count2][col + count2].getCheck() == 1)
 				{
 					score_com2++;
 				}
@@ -1260,12 +1260,12 @@ long _Board::scoreDefDiag1(int row, int col)
 	}
 	for (int count1 = 1; count1 < 6 && row - count1 >= 0 && col - count1 >= 0; count1++)
 	{
-		if (_pArr[row - count1][col - count1].getCheck() == 1)
+		if (_pArr[row - count1][col - count1].getCheck() == -1)
 		{
 			score_player1++;
 			break;
 		}
-		if (_pArr[row - count1][col - count1].getCheck() == -1)
+		if (_pArr[row - count1][col - count1].getCheck() == 1)
 		{
 			score_com1++;
 		}
@@ -1273,12 +1273,12 @@ long _Board::scoreDefDiag1(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row - count2 >= 0 && col - count2 >= 0; count2++)
 			{
-				if (_pArr[row - count2][col - count2].getCheck() == 1)
+				if (_pArr[row - count2][col - count2].getCheck() == -1)
 				{
 					score_player2++;
 					break;
 				}
-				if (_pArr[row - count2][col - count2].getCheck() == -1)
+				if (_pArr[row - count2][col - count2].getCheck() == 1)
 				{
 					score_com2++;
 				}
@@ -1330,12 +1330,12 @@ long _Board::scoreDefDiag2(int row, int col)
 	int score_com2 = 0;
 	for (int count1 = 1; count1 < 6 && row + count1 < _size && col - count1 < _size; count1++)
 	{
-		if (_pArr[row + count1][col - count1].getCheck() == 1)
+		if (_pArr[row + count1][col - count1].getCheck() == -1)
 		{
 			score_player1++;
 			break;
 		}
-		if (_pArr[row + count1][col - count1].getCheck() == -1)
+		if (_pArr[row + count1][col - count1].getCheck() == 1)
 		{
 			score_com1++;
 		}
@@ -1343,12 +1343,12 @@ long _Board::scoreDefDiag2(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row + count2 < _size && col - count2 < _size; count2++)
 			{
-				if (_pArr[row + count2][col - count2].getCheck() == 1)
+				if (_pArr[row + count2][col - count2].getCheck() == -1)
 				{
 					score_player2++;
 					break;
 				}
-				if (_pArr[row + count2][col - count2].getCheck() == -1)
+				if (_pArr[row + count2][col - count2].getCheck() == 1)
 				{
 					score_com2++;
 				}
@@ -1362,12 +1362,12 @@ long _Board::scoreDefDiag2(int row, int col)
 	}
 	for (int count1 = 1; count1 < 6 && row - count1 >= 0 && col + count1 >= 0; count1++)
 	{
-		if (_pArr[row - count1][col + count1].getCheck() == 1)
+		if (_pArr[row - count1][col + count1].getCheck() == -1)
 		{
 			score_player1++;
 			break;
 		}
-		if (_pArr[row - count1][col + count1].getCheck() == -1)
+		if (_pArr[row - count1][col + count1].getCheck() == 1)
 		{
 			score_com1++;
 		}
@@ -1375,12 +1375,12 @@ long _Board::scoreDefDiag2(int row, int col)
 		{
 			for (int count2 = 2; count2 < 7 && row - count2 >= 0 && col + count2 >= 0; count2++)
 			{
-				if (_pArr[row - count2][col + count2].getCheck() == 1)
+				if (_pArr[row - count2][col + count2].getCheck() == -1)
 				{
 					score_player2++;
 					break;
 				}
-				if (_pArr[row - count2][col + count2].getCheck() == -1)
+				if (_pArr[row - count2][col + count2].getCheck() == 1)
 				{
 					score_com2++;
 				}
