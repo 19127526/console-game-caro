@@ -139,7 +139,7 @@ int _Game::processFinish()
 		_finish = 1;
 		_countP2Wins++;
 		printWinPos();
-		if (_mode == 0)
+		if (_p2Name != "Computer")
 			printP2Win();
 		else
 			printBotWin();
@@ -148,7 +148,7 @@ int _Game::processFinish()
 		_finish = 1;
 		_countP1Wins++;
 		printWinPos();
-		if (_mode == 0)
+		if (_p1Name != "Computer")
 			printP1Win();
 		else
 			printBotWin();
