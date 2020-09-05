@@ -393,7 +393,7 @@ void _Game::setUpGame(int mode, string fileName)
 	}
 	else
 	{
-		_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+		_Common::setConsoleColor(BRIGHT_WHITE, GRAY);
 		_Common::clearConsole();
 		_Menu::printLogo();
 		_mode = mode;
