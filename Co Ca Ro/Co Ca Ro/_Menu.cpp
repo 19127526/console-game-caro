@@ -13,7 +13,6 @@ void _Menu::mainScreen()
 		{options[5], playPvC1},
 		{options[6], playPvC2},
 		{options[7], goBack} };
-	_Common::playSound(9);
 	printAnimation();
 	bool loadMenu = 1;
 	while (true)
@@ -38,16 +37,16 @@ void _Menu::mainScreen()
 			function_map[options[current_option]]();
 			break;
 		default:
-			_Common::playSound(4); //wrong key sound
+			_Common::playSound(4);
 			loadMenu = 0;
 		}
 	}
-
 	_Common::clearConsole();
 }
 
 void _Menu::printLogo()
 {
+	_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
 	unsigned char logo[] = {
 		32,219,219,219,219,219,219,187,32,219,219,219,219,219,219,187,32,32,32,32,32,32,32,219,219,219,219,219,219,187,32,219,219,219,219,219,187,32,219,219,219,219,219,219,187,32,32,219,219,219,219,219,219,187,32,
 219,219,201,205,205,205,205,188,219,219,201,205,205,205,219,219,187,32,32,32,32,32,219,219,201,205,205,205,205,188,219,219,201,205,205,219,219,187,219,219,201,205,205,219,219,187,219,219,201,205,205,205,219,219,187,
@@ -67,7 +66,7 @@ void _Menu::printLogo()
 
 void _Menu::printOptionsBoard()
 {
-	_Common::setConsoleColor(BRIGHT_WHITE, YELLOW);
+	_Common::setConsoleColor(BRIGHT_WHITE, GRAY);
 	int left = 48;
 	int top = 20;
 	_Common::gotoXY(left, top);
@@ -172,7 +171,7 @@ void _Menu::changeOption(bool direction, bool flag) //0 for up, 1 for down
 		_Common::playSound(4);
 		return;
 	}
-	_Common::setConsoleColor(BRIGHT_WHITE, BLUE);
+	_Common::setConsoleColor(BRIGHT_WHITE, GRAY);
 	_Common::gotoXY(54 - (int)options[current_option].length() / 2, top + current_option % 4 * 2);
 	cout << options[current_option];
 	if (flag)
@@ -186,7 +185,7 @@ void _Menu::changeOption(bool direction, bool flag) //0 for up, 1 for down
 	if(flag)
 	{
 		_Common::playSound(2);
-		_Common::setConsoleColor(BRIGHT_WHITE, GREEN);
+		_Common::setConsoleColor(BRIGHT_WHITE, LIGHT_RED);
 		_Common::gotoXY(44, top + current_option % 4 * 2);
 		putchar(175);
 		_Common::gotoXY(54 - (int)options[current_option].length() / 2, top + current_option % 4 * 2);
@@ -198,7 +197,7 @@ void _Menu::changeOption(bool direction, bool flag) //0 for up, 1 for down
 
 void _Menu::mainMenu()
 {
-	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
+	_Common::setConsoleColor(BRIGHT_WHITE, GRAY);
 	_Common::clearConsole();
 	printLogo();
 	printOptionsBoard();
