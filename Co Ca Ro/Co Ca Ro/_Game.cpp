@@ -421,6 +421,7 @@ void _Game::setUpGame(int mode, string fileName)
 
 void _Game::printWinPos()
 {
+	_Common::playSound(9);
 	_Point* win = _b->getWinPos();
 	int pWhoWin = _b->testBoard(_x, _y);
 	int symbol = (_turn) ? 88 : 79;
@@ -440,7 +441,7 @@ void _Game::printWinPos()
 			_Common::gotoXY(win[i].getX(), win[i].getY());
 			putchar(symbol2);
 		}
-		Sleep(100);
+		Sleep(300);
 		loop--;
 	}
 	delete[] win;
@@ -688,7 +689,7 @@ void _Game::printBotWin()
 }
 void _Game::printDraw()
 {
-	_Common::playSound(8);
+	_Common::playSound(6);
 	_Common::setConsoleColor(BRIGHT_WHITE, BLACK);
 	_Common::clearConsole();
 	unsigned char Draw_1[] = {

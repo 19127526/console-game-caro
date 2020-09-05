@@ -13,7 +13,7 @@ void _Menu::mainScreen()
 		{options[5], playPvC1},
 		{options[6], playPvC2},
 		{options[7], goBack} };
-	_Common::playSound(9);
+	_Common::playSound(8);
 	printAnimation();
 	bool loadMenu = 1;
 	while (true)
